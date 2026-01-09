@@ -2,55 +2,211 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>Email Helper IA</title>
+<title>Assistant Email IA</title>
+
 <style>
+:root {
+  --primary: #4f46e5;
+  --secondary: #6366f1;
+  --bg: #f5f7fb;
+  --card: #ffffff;
+  --text: #1f2937;
+  --muted: #6b7280;
+  --success: #16a34a;
+  --warning: #f59e0b;
+}
+
+* {
+  box-sizing: border-box;
+}
+
 body {
-  font-family: Arial;
-  background: #f4f6f8;
+  margin: 0;
+  font-family: "Segoe UI", system-ui, sans-serif;
+  background: linear-gradient(135deg, #eef2ff, #f8fafc);
+  color: var(--text);
+}
+
+.container {
+  max-width: 900px;
+  margin: 40px auto;
   padding: 20px;
 }
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.logo {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 22px;
+}
+
+h1 {
+  font-size: 26px;
+  margin: 0;
+}
+
+.subtitle {
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+.card {
+  background: var(--card);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+  margin-bottom: 20px;
+}
+
+label {
+  font-weight: 600;
+  display: block;
+  margin-bottom: 8px;
+}
+
 textarea {
   width: 100%;
-  height: 150px;
+  height: 180px;
+  padding: 14px;
+  font-size: 15px;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  resize: vertical;
 }
-button {
-  padding: 10px;
-  margin-top: 10px;
+
+textarea:focus {
+  outline: none;
+  border-color: var(--primary);
 }
-#resultat {
-  background: white;
-  padding: 15px;
+
+.actions {
   margin-top: 15px;
-  border-radius: 5px;
+  text-align: right;
+}
+
+button {
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  color: white;
+  border: none;
+  padding: 12px 22px;
+  border-radius: 12px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(79,70,229,0.3);
+}
+
+.result {
+  border-left: 6px solid var(--primary);
+}
+
+.result h2 {
+  margin-top: 0;
+  font-size: 20px;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 10px 0;
+  font-size: 15px;
+}
+
+.badge {
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.badge.warning {
+  background: #fff7ed;
+  color: var(--warning);
+}
+
+.badge.success {
+  background: #ecfdf5;
+  color: var(--success);
+}
+
+.footer {
+  text-align: center;
+  color: var(--muted);
+  font-size: 13px;
+  margin-top: 30px;
 }
 </style>
 </head>
 
 <body>
 
-<h2>📧 Assistant Email IA</h2>
-<p>Colle ton email :</p>
+<div class="container">
 
-<textarea id="mail"></textarea><br>
-<button onclick="analyser()">Analyser</button>
+  <div class="header">
+    <div class="logo">🤖</div>
+    <div>
+      <h1>Assistant Email IA</h1>
+      <div class="subtitle">Résume, priorise et décide pour toi</div>
+    </div>
+  </div>
 
-<div id="resultat"></div>
+  <div class="card">
+    <label>📧 Colle ton email :</label>
+    <textarea placeholder="Colle ici le contenu de l’email..."></textarea>
+
+    <div class="actions">
+      <button onclick="analyser()">Analyser l’email</button>
+    </div>
+  </div>
+
+  <div id="resultat" class="card result" style="display:none;">
+    <h2>📌 Analyse</h2>
+
+    <div class="item">
+      📍 <strong>Résumé :</strong> Répondre à ce mail.
+    </div>
+
+    <div class="item">
+      ⚠️ <strong>Priorité :</strong>
+      <span class="badge warning">Moyenne</span>
+    </div>
+
+    <div class="item">
+      ⏱️ <strong>Temps estimé :</strong> 5 minutes
+    </div>
+
+    <div class="item">
+      ✅ <strong>Action :</strong>
+      <span class="badge success">Répondre aujourd’hui</span>
+    </div>
+  </div>
+
+  <div class="footer">
+    © 2026 – Assistant Email IA
+  </div>
+
+</div>
 
 <script>
 function analyser() {
-  const mail = document.getElementById("mail").value;
-
-  if(mail.trim() === "") {
-    alert("Colle un email");
-    return;
-  }
-
-  document.getElementById("resultat").innerHTML = `
-    <b>📌 Résumé :</b> Répondre à ce mail.<br><br>
-    <b>🚨 Priorité :</b> Moyenne<br>
-    <b>⏱ Temps estimé :</b> 5 minutes<br>
-    <b>✅ Action :</b> Répondre aujourd’hui
-  `;
+  document.getElementById("resultat").style.display = "block";
 }
 </script>
 
