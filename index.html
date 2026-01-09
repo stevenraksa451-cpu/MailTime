@@ -1,151 +1,142 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>MailTime</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #4f46e5, #06b6d4);
-      margin: 0;
-      padding: 0;
-    }
+    <meta charset="UTF-8">
+    <title>MailTime – Assistant Email IA</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    .container {
-      max-width: 800px;
-      margin: 40px auto;
-      background: #ffffff;
-      border-radius: 12px;
-      padding: 25px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-    }
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #4f46e5, #6366f1, #818cf8);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-    h1 {
-      text-align: center;
-      color: #1f2933;
-    }
+        .app-container {
+            background: #ffffff;
+            width: 100%;
+            max-width: 900px;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.2);
+        }
 
-    .subtitle {
-      text-align: center;
-      color: #6b7280;
-      margin-bottom: 20px;
-    }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
 
-    textarea {
-      width: 100%;
-      height: 160px;
-      padding: 12px;
-      border-radius: 8px;
-      border: 1px solid #d1d5db;
-      font-size: 14px;
-    }
+        .header h1 {
+            font-size: 26px;
+            font-weight: 600;
+            color: #111827;
+        }
 
-    .buttons {
-      display: flex;
-      gap: 10px;
-      margin-top: 15px;
-    }
+        .gmail-btn {
+            background: #111827;
+            color: white;
+            border: none;
+            padding: 12px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+        }
 
-    button {
-      flex: 1;
-      padding: 12px;
-      border: none;
-      border-radius: 8px;
-      font-size: 15px;
-      cursor: pointer;
-    }
+        .gmail-btn:hover {
+            background: #1f2937;
+        }
 
-    .analyze {
-      background: #4f46e5;
-      color: white;
-    }
+        label {
+            font-size: 14px;
+            color: #374151;
+            margin-bottom: 6px;
+            display: block;
+        }
 
-    .analyze:hover {
-      background: #4338ca;
-    }
+        textarea {
+            width: 100%;
+            height: 200px;
+            border-radius: 10px;
+            border: 1px solid #d1d5db;
+            padding: 14px;
+            font-size: 14px;
+            resize: none;
+        }
 
-    .connect {
-      background: #22c55e;
-      color: white;
-    }
+        .analyze-btn {
+            margin-top: 16px;
+            background: linear-gradient(135deg, #4f46e5, #6366f1);
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            font-size: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 100%;
+        }
 
-    .connect:hover {
-      background: #16a34a;
-    }
+        .analyze-btn:hover {
+            opacity: 0.95;
+        }
 
-    .result {
-      margin-top: 25px;
-      background: #f9fafb;
-      border-radius: 10px;
-      padding: 15px;
-      border-left: 6px solid #4f46e5;
-      display: none;
-    }
+        .result {
+            margin-top: 28px;
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 5px solid #6366f1;
+        }
 
-    .result p {
-      margin: 8px 0;
-      font-size: 14px;
-    }
+        .result p {
+            margin: 8px 0;
+            color: #111827;
+            font-size: 14px;
+        }
 
-    .label {
-      font-weight: bold;
-    }
-
-    footer {
-      text-align: center;
-      margin-top: 20px;
-      font-size: 12px;
-      color: #6b7280;
-    }
-  </style>
+        .footer {
+            margin-top: 24px;
+            text-align: center;
+            font-size: 12px;
+            color: #6b7280;
+        }
+    </style>
 </head>
 <body>
 
-  <div class="container">
-    <h1>📩 MailTime</h1>
-    <p class="subtitle">L’assistant IA qui te fait gagner du temps avec tes emails</p>
+<div class="app-container">
+    <div class="header">
+        <h1>MailTime</h1>
+        <button class="gmail-btn">Connecter Gmail</button>
+    </div>
 
-    <label><strong>Colle ton email :</strong></label>
+    <label>Colle ton email :</label>
     <textarea id="emailInput" placeholder="Colle ici le contenu de ton email..."></textarea>
 
-    <div class="buttons">
-      <button class="analyze" onclick="analyserEmail()">🔍 Analyser</button>
-      <button class="connect" onclick="connectEmail()">🔗 Connecter Gmail</button>
+    <button class="analyze-btn" onclick="analyzeEmail()">Analyser l’email</button>
+
+    <div class="result" id="resultBox" style="display:none;">
+        <p><strong>Résumé :</strong> Répondre à ce mail.</p>
+        <p><strong>Priorité :</strong> Moyenne</p>
+        <p><strong>Temps estimé :</strong> 5 minutes</p>
+        <p><strong>Action :</strong> Répondre aujourd’hui</p>
     </div>
 
-    <div class="result" id="result">
-      <p><span class="label">📌 Résumé :</span> <span id="resume"></span></p>
-      <p><span class="label">⚠️ Priorité :</span> <span id="priorite"></span></p>
-      <p><span class="label">⏱️ Temps estimé :</span> <span id="temps"></span></p>
-      <p><span class="label">✅ Action :</span> <span id="action"></span></p>
+    <div class="footer">
+        © 2026 MailTime – Assistant Email Intelligent
     </div>
+</div>
 
-    <footer>
-      © 2026 MailTime – Assistant Email IA
-    </footer>
-  </div>
-
-  <script>
-    function analyserEmail() {
-      const email = document.getElementById("emailInput").value;
-      if (!email.trim()) {
-        alert("Veuillez coller un email.");
-        return;
-      }
-
-      // Simulation IA (démo)
-      document.getElementById("resume").innerText = "Email de sécurité nécessitant une action.";
-      document.getElementById("priorite").innerText = "Moyenne";
-      document.getElementById("temps").innerText = "5 minutes";
-      document.getElementById("action").innerText = "Vérifier et répondre aujourd’hui";
-
-      document.getElementById("result").style.display = "block";
+<script>
+    function analyzeEmail() {
+        document.getElementById("resultBox").style.display = "block";
     }
-
-    function connectEmail() {
-      alert("Connexion Gmail bientôt disponible 🔐\n(Fonctionnalité en développement)");
-    }
-  </script>
+</script>
 
 </body>
 </html>
