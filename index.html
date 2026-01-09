@@ -1,214 +1,151 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<title>Assistant Email IA</title>
+  <meta charset="UTF-8">
+  <title>MailTime</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #4f46e5, #06b6d4);
+      margin: 0;
+      padding: 0;
+    }
 
-<style>
-:root {
-  --primary: #4f46e5;
-  --secondary: #6366f1;
-  --bg: #f5f7fb;
-  --card: #ffffff;
-  --text: #1f2937;
-  --muted: #6b7280;
-  --success: #16a34a;
-  --warning: #f59e0b;
-}
+    .container {
+      max-width: 800px;
+      margin: 40px auto;
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 25px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
 
-* {
-  box-sizing: border-box;
-}
+    h1 {
+      text-align: center;
+      color: #1f2933;
+    }
 
-body {
-  margin: 0;
-  font-family: "Segoe UI", system-ui, sans-serif;
-  background: linear-gradient(135deg, #eef2ff, #f8fafc);
-  color: var(--text);
-}
+    .subtitle {
+      text-align: center;
+      color: #6b7280;
+      margin-bottom: 20px;
+    }
 
-.container {
-  max-width: 900px;
-  margin: 40px auto;
-  padding: 20px;
-}
+    textarea {
+      width: 100%;
+      height: 160px;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #d1d5db;
+      font-size: 14px;
+    }
 
-.header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 20px;
-}
+    .buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+    }
 
-.logo {
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
-  background: linear-gradient(135deg, var(--primary), var(--secondary));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-size: 22px;
-}
+    button {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      cursor: pointer;
+    }
 
-h1 {
-  font-size: 26px;
-  margin: 0;
-}
+    .analyze {
+      background: #4f46e5;
+      color: white;
+    }
 
-.subtitle {
-  color: var(--muted);
-  margin-top: 4px;
-}
+    .analyze:hover {
+      background: #4338ca;
+    }
 
-.card {
-  background: var(--card);
-  border-radius: 16px;
-  padding: 20px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-  margin-bottom: 20px;
-}
+    .connect {
+      background: #22c55e;
+      color: white;
+    }
 
-label {
-  font-weight: 600;
-  display: block;
-  margin-bottom: 8px;
-}
+    .connect:hover {
+      background: #16a34a;
+    }
 
-textarea {
-  width: 100%;
-  height: 180px;
-  padding: 14px;
-  font-size: 15px;
-  border-radius: 12px;
-  border: 1px solid #e5e7eb;
-  resize: vertical;
-}
+    .result {
+      margin-top: 25px;
+      background: #f9fafb;
+      border-radius: 10px;
+      padding: 15px;
+      border-left: 6px solid #4f46e5;
+      display: none;
+    }
 
-textarea:focus {
-  outline: none;
-  border-color: var(--primary);
-}
+    .result p {
+      margin: 8px 0;
+      font-size: 14px;
+    }
 
-.actions {
-  margin-top: 15px;
-  text-align: right;
-}
+    .label {
+      font-weight: bold;
+    }
 
-button {
-  background: linear-gradient(135deg, var(--primary), var(--secondary));
-  color: white;
-  border: none;
-  padding: 12px 22px;
-  border-radius: 12px;
-  font-size: 15px;
-  cursor: pointer;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-}
-
-button:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 8px 20px rgba(79,70,229,0.3);
-}
-
-.result {
-  border-left: 6px solid var(--primary);
-}
-
-.result h2 {
-  margin-top: 0;
-  font-size: 20px;
-}
-
-.item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin: 10px 0;
-  font-size: 15px;
-}
-
-.badge {
-  padding: 6px 12px;
-  border-radius: 999px;
-  font-size: 13px;
-  font-weight: 600;
-}
-
-.badge.warning {
-  background: #fff7ed;
-  color: var(--warning);
-}
-
-.badge.success {
-  background: #ecfdf5;
-  color: var(--success);
-}
-
-.footer {
-  text-align: center;
-  color: var(--muted);
-  font-size: 13px;
-  margin-top: 30px;
-}
-</style>
+    footer {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 12px;
+      color: #6b7280;
+    }
+  </style>
 </head>
-
 <body>
 
-<div class="container">
+  <div class="container">
+    <h1>📩 MailTime</h1>
+    <p class="subtitle">L’assistant IA qui te fait gagner du temps avec tes emails</p>
 
-  <div class="header">
-    <div class="logo">🤖</div>
-    <div>
-      <h1>Assistant Email IA</h1>
-      <div class="subtitle">Résume, priorise et décide pour toi</div>
+    <label><strong>Colle ton email :</strong></label>
+    <textarea id="emailInput" placeholder="Colle ici le contenu de ton email..."></textarea>
+
+    <div class="buttons">
+      <button class="analyze" onclick="analyserEmail()">🔍 Analyser</button>
+      <button class="connect" onclick="connectEmail()">🔗 Connecter Gmail</button>
     </div>
+
+    <div class="result" id="result">
+      <p><span class="label">📌 Résumé :</span> <span id="resume"></span></p>
+      <p><span class="label">⚠️ Priorité :</span> <span id="priorite"></span></p>
+      <p><span class="label">⏱️ Temps estimé :</span> <span id="temps"></span></p>
+      <p><span class="label">✅ Action :</span> <span id="action"></span></p>
+    </div>
+
+    <footer>
+      © 2026 MailTime – Assistant Email IA
+    </footer>
   </div>
 
-  <div class="card">
-    <label>📧 Colle ton email :</label>
-    <textarea placeholder="Colle ici le contenu de l’email..."></textarea>
+  <script>
+    function analyserEmail() {
+      const email = document.getElementById("emailInput").value;
+      if (!email.trim()) {
+        alert("Veuillez coller un email.");
+        return;
+      }
 
-    <div class="actions">
-      <button onclick="analyser()">Analyser l’email</button>
-    </div>
-  </div>
+      // Simulation IA (démo)
+      document.getElementById("resume").innerText = "Email de sécurité nécessitant une action.";
+      document.getElementById("priorite").innerText = "Moyenne";
+      document.getElementById("temps").innerText = "5 minutes";
+      document.getElementById("action").innerText = "Vérifier et répondre aujourd’hui";
 
-  <div id="resultat" class="card result" style="display:none;">
-    <h2>📌 Analyse</h2>
+      document.getElementById("result").style.display = "block";
+    }
 
-    <div class="item">
-      📍 <strong>Résumé :</strong> Répondre à ce mail.
-    </div>
-
-    <div class="item">
-      ⚠️ <strong>Priorité :</strong>
-      <span class="badge warning">Moyenne</span>
-    </div>
-
-    <div class="item">
-      ⏱️ <strong>Temps estimé :</strong> 5 minutes
-    </div>
-
-    <div class="item">
-      ✅ <strong>Action :</strong>
-      <span class="badge success">Répondre aujourd’hui</span>
-    </div>
-  </div>
-
-  <div class="footer">
-    © 2026 – Assistant Email IA
-  </div>
-
-</div>
-
-<script>
-function analyser() {
-  document.getElementById("resultat").style.display = "block";
-}
-</script>
+    function connectEmail() {
+      alert("Connexion Gmail bientôt disponible 🔐\n(Fonctionnalité en développement)");
+    }
+  </script>
 
 </body>
 </html>
