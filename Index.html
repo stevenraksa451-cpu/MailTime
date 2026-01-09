@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Email Helper IA</title>
+<style>
+body {
+  font-family: Arial;
+  background: #f4f6f8;
+  padding: 20px;
+}
+textarea {
+  width: 100%;
+  height: 150px;
+}
+button {
+  padding: 10px;
+  margin-top: 10px;
+}
+#resultat {
+  background: white;
+  padding: 15px;
+  margin-top: 15px;
+  border-radius: 5px;
+}
+</style>
+</head>
+
+<body>
+
+<h2>📧 Assistant Email IA</h2>
+<p>Colle ton email :</p>
+
+<textarea id="mail"></textarea><br>
+<button onclick="analyser()">Analyser</button>
+
+<div id="resultat"></div>
+
+<script>
+function analyser() {
+  const mail = document.getElementById("mail").value;
+
+  if(mail.trim() === "") {
+    alert("Colle un email");
+    return;
+  }
+
+  document.getElementById("resultat").innerHTML = `
+    <b>📌 Résumé :</b> Répondre à ce mail.<br><br>
+    <b>🚨 Priorité :</b> Moyenne<br>
+    <b>⏱ Temps estimé :</b> 5 minutes<br>
+    <b>✅ Action :</b> Répondre aujourd’hui
+  `;
+}
+</script>
+
+</body>
+</html>
