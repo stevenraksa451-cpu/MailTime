@@ -1,85 +1,59 @@
-// ---------------------------------------------------
-// script.js - MailTime Front-End
-// ---------------------------------------------------
-
 const connectBtn = document.getElementById("connectBtn");
 const signInBtn = document.getElementById("signInBtn");
-const emailsContainer = document.getElementById("emailsContainer");
+const avatar = document.getElementById("avatar");
+const avatarDropdown = document.getElementById("avatarDropdown");
+const logoutBtn = document.getElementById("logoutBtn");
+
+// Simulation d'un utilisateur connecté
+let isConnected = false; // false par défaut
+let avatarUrl = "https://i.pravatar.cc/150?u=stevenraksa"; // avatar Gmail simulé
 
 // ---------------------------
-// 1️⃣ Connexion à Gmail
+// 1️⃣ Connexion Gmail
 // ---------------------------
-if(connectBtn){
-  connectBtn.addEventListener("click", () => {
-    // Ouvre la page d'autorisation OAuth dans un nouvel onglet
-    window.open("http://127.0.0.1:3001/auth/google", "_blank");
-    alert("Une nouvelle fenêtre va s'ouvrir pour autoriser MailTime à accéder à vos emails.");
-  });
-}
-
-// Simuler Sign In pour rediriger vers le dashboard
-if(signInBtn){
-  signInBtn.addEventListener("click", () => {
-    window.location.href = "dashboard.html";
-  });
-}
+connectBtn.addEventListener("click", () => {
+  window.open("http://127.0.0.1:3001/auth/google", "_blank");
+  alert("Une nouvelle fenêtre s'ouvre pour autoriser MailTime.");
+  // Après connexion simulate
+  setTimeout(() => {
+    isConnected = true;
+    showAvatar();
+  }, 1000); // simulation délai OAuth
+});
 
 // ---------------------------
-// 2️⃣ Fonction pour calculer l'importance
+// 2️⃣ Afficher avatar si connecté
 // ---------------------------
-function importance(email){
-  if(!email.subject) return 0;
-  const subject = email.subject.toLowerCase();
-  if(subject.includes("urgent")) return 3;
-  if(subject.includes("important")) return 2;
-  return 1; // faible
-}
-
-// ---------------------------
-// 3️⃣ Fonction pour récupérer les emails
-// ---------------------------
-async function fetchEmails(){
-  if(!emailsContainer) return;
-
-  try{
-    const res = await fetch("http://127.0.0.1:3001/emails/today");
-    
-    if(res.status === 401){
-      emailsContainer.innerHTML = "<p>Non connecté à Gmail. Retournez à la page d'accueil.</p>";
-      return;
-    }
-
-    const emails = await res.json();
-
-    if(emails.length === 0){
-      emailsContainer.innerHTML = "<p>Aucun email aujourd'hui.</p>";
-      return;
-    }
-
-    // Trier les emails par importance
-    emails.sort((a,b) => importance(b) - importance(a));
-
-    // Affichage
-    emailsContainer.innerHTML = emails.map(email => `
-      <div class="email-card">
-        <strong>De : ${email.from}</strong>
-        <span class="subject">Sujet : ${email.subject}</span>
-        <span class="importance">Importance : ${["Faible","Moyenne","Haute","Très haute"][importance(email)]}</span>
-        <div>
-          <button onclick="alert('Fonction réponse à implémenter')">Répondre</button>
-          <button onclick="alert('Fonction marquer comme lu à implémenter')">Marquer comme lu</button>
-        </div>
-      </div>
-    `).join("");
-
-  } catch(err){
-    emailsContainer.innerHTML = "<p>Erreur : " + err.message + "</p>";
+function showAvatar() {
+  if(isConnected){
+    avatar.src = avatarUrl;
+    avatar.style.display = "inline-block";
+    connectBtn.style.display = "none";
+    signInBtn.style.display = "none";
   }
 }
 
 // ---------------------------
-// 4️⃣ Rafraîchissement automatique
+// 3️⃣ Menu déroulant au clic sur avatar
 // ---------------------------
-setInterval(fetchEmails, 10000); // toutes les 10 secondes
-fetchEmails(); // appel initial
+avatar.addEventListener("click", () => {
+  avatarDropdown.style.display = avatarDropdown.style.display === "flex" ? "none" : "flex";
+});
 
+// Fermer le menu si clic en dehors
+window.addEventListener("click", (e) => {
+  if(!avatar.contains(e.target) && !avatarDropdown.contains(e.target)){
+    avatarDropdown.style.display = "none";
+  }
+});
+
+// ---------------------------
+// 4️⃣ Déconnexion
+// ---------------------------
+logoutBtn.addEventListener("click", () => {
+  isConnected = false;
+  avatar.style.display = "none";
+  connectBtn.style.display = "inline-block";
+  signInBtn.style.display = "inline-block";
+  avatarDropdown.style.display = "none";
+});
