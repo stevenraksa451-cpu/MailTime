@@ -1,38 +1,51 @@
 const loginBtn = document.getElementById("loginBtn");
-const mainLoginBtn = document.getElementById("mainLoginBtn");
 const avatar = document.getElementById("avatar");
+const userMenu = document.getElementById("userMenu");
+const userName = document.getElementById("userName");
+const userEmail = document.getElementById("userEmail");
+const logoutBtn = document.getElementById("logoutBtn");
 
-function openGoogleLogin() {
-  const popup = window.open(
+// Ouvrir popup Google
+loginBtn.onclick = () => {
+  window.open(
     "http://127.0.0.1:3001/auth/google",
-    "googleLogin",
+    "_blank",
     "width=500,height=600"
   );
+};
 
-  const timer = setInterval(async () => {
-    if (popup.closed) {
-      clearInterval(timer);
-      await fetchUser();
-    }
-  }, 500);
+// Afficher ou cacher le menu
+avatar.onclick = () => {
+  userMenu.style.display = userMenu.style.display === "none" ? "flex" : "none";
+};
+
+// Déconnexion
+logoutBtn.onclick = () => {
+  avatar.style.display = "none";
+  userMenu.style.display = "none";
+  loginBtn.style.display = "block";
+  // Supprimer le token côté frontend
+  fetch("http://127.0.0.1:3001/logout"); // Optionnel : à créer côté backend si besoin
+};
+
+// Vérifie si l’utilisateur est connecté et met à jour l’UI
+async function checkAuth() {
+  try {
+    const res = await fetch("http://127.0.0.1:3001/me");
+    if (!res.ok) return;
+
+    const user = await res.json();
+
+    loginBtn.style.display = "none";
+    avatar.src = user.picture;
+    avatar.style.display = "block";
+
+    userName.innerText = user.name;
+    userEmail.innerText = user.email;
+    userMenu.style.display = "none";
+  } catch (e) {
+    console.log("Utilisateur non connecté");
+  }
 }
 
-loginBtn.addEventListener("click", openGoogleLogin);
-mainLoginBtn.addEventListener("click", openGoogleLogin);
-
-async function fetchUser() {
-  const res = await fetch("http://127.0.0.1:3001/me", {
-    credentials: "include"
-  });
-
-  if (!res.ok) return;
-
-  const user = await res.json();
-
-  // Avatar réel Gmail
-  avatar.src = user.picture;
-  avatar.style.display = "block";
-
-  loginBtn.style.display = "none";
-  mainLoginBtn.style.display = "none";
-}
+checkAuth();
