@@ -51,6 +51,22 @@ body {
   box-shadow: 0 14px 32px rgba(0, 0, 0, 0.12);
 }
 
+.email-card strong {
+  font-size: 15px;
+  color: #111;
+}
+
+.email-card p {
+  margin: 6px 0 10px;
+  font-size: 16px;
+  color: #000;
+}
+
+.email-card em {
+  font-size: 14px;
+  color: #444;
+  font-style: normal;
+}
 nav button {
   background: transparent;
   border: none;
