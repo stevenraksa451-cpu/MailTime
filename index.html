@@ -1,43 +1,36 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MailTime</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MailTime</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-<header>
-  <img src="logo.png" class="logo" alt="MailTime Logo">
+<header class="header">
+  <div class="logo">
+    <img src="logo.png" alt="MailTime logo">
+  </div>
+
   <nav>
-    <button id="signInBtn">Sign In</button>
-    <button id="connectBtn">Se connecter à Gmail</button>
-    <img src="" class="avatar" id="avatar" style="display:none;">
-    <div class="dropdown" id="avatarDropdown">
-      <a href="#">Steven Raksa</a>
-      <a href="mailto:stevenraksa451@gmail.com">stevenraksa451@gmail.com</a>
-      <a href="#">Obtenir un abonnement</a>
-      <a href="#">Ajouter des membres</a>
-      <a href="#">Abonnement et facturation</a>
-      <a href="#">Free</a>
-      <a href="#">Paramètres</a>
-      <a href="#">Profil du créateur</a>
-      <a href="#">Mes collections</a>
-      <a href="#">Langue</a>
-      <a href="#">Thème Sombre</a>
-      <a href="#">Utiliser le code IA</a>
-      <a href="#">Centre d’aide</a>
-      <a href="#" id="logoutBtn">Se déconnecter</a>
-    </div>
+    <button id="loginBtn">Se connecter</button>
+    <img id="avatar" class="avatar" style="display:none;" />
   </nav>
 </header>
 
-<main>
-  <h1>MailTime</h1>
-  <p class="description">
-    MailTime : Vos emails résumés en un clin d’œil. Gérez votre journée comme un pro. Gagnez des heures chaque jour.
+<main class="hero">
+  <h1>Reprenez le contrôle de vos emails.</h1>
+  <p class="subtitle">
+    MailTime analyse automatiquement vos emails Gmail, les résume avec intelligence
+    et vous aide à prioriser l’essentiel.  
+    Gagnez du temps, restez concentré et transformez votre boîte mail en un outil
+    de productivité moderne.
   </p>
+
+  <button class="main-cta" id="mainLoginBtn">
+    Se connecter
+  </button>
 </main>
 
 <script src="script.js"></script>
