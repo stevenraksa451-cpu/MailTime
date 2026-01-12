@@ -1,84 +1,53 @@
 const loginBtn = document.getElementById("loginBtn");
+const mainLoginBtn = document.getElementById("mainLoginBtn");
 const avatar = document.getElementById("avatar");
-const userMenu = document.getElementById("userMenu");
-const userName = document.getElementById("userName");
-const userEmail = document.getElementById("userEmail");
-const logoutBtn = document.getElementById("logoutBtn");
-
 const landing = document.getElementById("landing");
 const dashboard = document.getElementById("dashboard");
-const emailsList = document.getElementById("emailsList");
+const emailsDiv = document.getElementById("emails");
 
-// Ouvrir popup Google OAuth
-loginBtn.onclick = () => {
+function login() {
   window.open(
     "http://127.0.0.1:3001/auth/google",
     "_blank",
     "width=500,height=600"
   );
-};
+}
 
-// Toggle menu utilisateur
-avatar.onclick = () => {
-  userMenu.style.display = userMenu.style.display === "none" ? "flex" : "none";
-};
+loginBtn.onclick = login;
+mainLoginBtn.onclick = login;
 
-// Déconnexion
-logoutBtn.onclick = async () => {
-  await fetch("http://127.0.0.1:3001/logout");
-  avatar.style.display = "none";
-  userMenu.style.display = "none";
-  loginBtn.style.display = "block";
-  landing.style.display = "block";
-  dashboard.style.display = "none";
-  emailsList.innerHTML = "";
-};
-
-// Vérifie si l’utilisateur est connecté et charge dashboard
 async function checkAuth() {
-  try {
-    const res = await fetch("http://127.0.0.1:3001/me");
-    if (!res.ok) return;
+  const res = await fetch("http://127.0.0.1:3001/me");
+  if (!res.ok) return;
 
-    const user = await res.json();
-    loginBtn.style.display = "none";
-    avatar.src = user.picture;
-    avatar.style.display = "block";
+  const user = await res.json();
 
-    userName.innerText = user.name;
-    userEmail.innerText = user.email;
+  loginBtn.style.display = "none";
+  mainLoginBtn.style.display = "none";
+  avatar.src = user.picture;
+  avatar.style.display = "block";
 
-    landing.style.display = "none";
-    dashboard.style.display = "block";
+  landing.style.display = "none";
+  dashboard.style.display = "block";
 
-    await loadDashboard();
-  } catch (e) {
-    console.log("Utilisateur non connecté");
-  }
+  loadEmails();
 }
 
-// Charge les emails du jour
-async function loadDashboard() {
-  try {
-    const res = await fetch("http://127.0.0.1:3001/emails/today");
-    if (!res.ok) return;
-    const emails = await res.json();
+async function loadEmails() {
+  const res = await fetch("http://127.0.0.1:3001/emails/today");
+  const emails = await res.json();
 
-    emailsList.innerHTML = "";
-    if (emails.length === 0) {
-      emailsList.innerHTML = "<p>Aucun email reçu aujourd'hui.</p>";
-      return;
-    }
-
-    emails.forEach(email => {
-      const div = document.createElement("div");
-      div.innerHTML = `<strong>${email.from}</strong> : ${email.subject}`;
-      emailsList.appendChild(div);
-    });
-  } catch (e) {
-    emailsList.innerHTML = "<p>Erreur lors de la récupération des emails.</p>";
+  emailsDiv.innerHTML = "";
+  if (!emails.length) {
+    emailsDiv.innerHTML = "<p>Aucun email aujourd’hui.</p>";
+    return;
   }
+
+  emails.forEach(e => {
+    const div = document.createElement("div");
+    div.innerHTML = `<strong>${e.from}</strong><br>${e.subject}`;
+    emailsDiv.appendChild(div);
+  });
 }
 
-// Lancement au démarrage
 checkAuth();
