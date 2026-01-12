@@ -17,7 +17,38 @@ body {
 }
 
 .logo img {
-  height: 56px;
+  height: 110px;     /* ← taille du logo (changeable) */
+  width: auto;
+}
+
+.emails {
+  max-width: 900px;
+  margin: 80px auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.email-card {
+  padding: 22px 26px;
+  border-radius: 16px;
+
+  background: linear-gradient(
+    135deg,
+    rgba(240, 244, 255, 0.75),
+    rgba(255, 255, 255, 0.85)
+  );
+
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.email-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.12);
 }
 
 nav button {
