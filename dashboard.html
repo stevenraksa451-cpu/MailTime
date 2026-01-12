@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MailTime - Dashboard</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <img src="logo.png" alt="MailTime Logo">
+  <nav>
+    <button onclick="window.location.href='index.html'">Déconnexion</button>
+  </nav>
+</header>
+
+<main>
+  <h2>Résumé de vos emails</h2>
+  <div id="emailsContainer"></div>
+</main>
+
+<script>
+const emailsContainer = document.getElementById("emailsContainer");
+
+// Exemple pour prioriser (important -> moins important)
+function importance(email) {
+  // simple logique : si sujet contient "urgent" -> important
+  if(!email.subject) return 0;
+  if(email.subject.toLowerCase().includes("urgent")) return 3;
+  if(email.subject.toLowerCase().includes("important")) return 2;
+  return 1;
+}
+
+// Récupérer les emails
+async function fetchEmails() {
+  try {
+    const res = await fetch("http://127.0.0.1:3001/emails/today");
+    if(res.status === 401) {
+      emailsContainer.innerHTML = "<p>Non connecté à Gmail. Retournez à la page d'accueil.</p>";
+      return;
+    }
+    const emails = await res.json();
+    if(emails.length === 0) {
+      emailsContainer.innerHTML = "<p>Aucun email aujourd'hui.</p>";
+      return;
+    }
+
+    // Trier par importance
+    emails.sort((a,b) => importance(b) - importance(a));
+
+    emailsContainer.innerHTML = emails.map(email => `
+      <div class="email-card">
+        <strong>De : ${email.from}</strong>
+        <span class="subject">Sujet : ${email.subject}</span>
+        <span class="importance">Importance : ${["Faible","Moyenne","Haute","Très haute"][importance(email)]}</span>
+        <div>
+          <button>Répondre</button>
+          <button>Marquer comme lu</button>
+        </div>
+      </div>
+    `).join("");
+  } catch(err) {
+    emailsContainer.innerHTML = "<p>Erreur : " + err.message + "</p>";
+  }
+}
+
+// Met à jour toutes les 10 secondes
+setInterval(fetchEmails, 10000);
+fetchEmails();
+</script>
+
+</body>
+</html>
