@@ -1,69 +1,85 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<title>MailTime</title>
-<style>
-body {
-  font-family: Arial, sans-serif;
-  background: linear-gradient(to right, #4facfe, #00f2fe);
-  color: #333;
-  text-align: center;
-  padding: 50px;
-}
-button {
-  padding: 10px 20px;
-  font-size: 16px;
-  background: #fff;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-}
-#emails {
-  margin-top: 20px;
-  text-align: left;
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MailTime</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px;
+    }
+    h1 { margin-bottom: 20px; }
+    button {
+      background: #fff;
+      color: #2575fc;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 5px;
+      margin-bottom: 30px;
+    }
+    button:hover { opacity: 0.9; }
+    .email-card {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 15px;
+      border-radius: 10px;
+      width: 300px;
+      margin-bottom: 15px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+    }
+    .email-card strong { display: block; margin-bottom: 5px; }
+  </style>
 </head>
 <body>
-<h1>MailTime</h1>
-<button id="connectBtn">Se connecter à Gmail</button>
-<div id="emails"></div>
 
-<script>
-const connectBtn = document.getElementById("connectBtn");
-const emailsDiv = document.getElementById("emails");
+  <h1>MailTime</h1>
 
-connectBtn.onclick = () => {
-  // ouvre la page d'autorisation Google dans un nouvel onglet
-  window.open("http://127.0.0.1:3001/auth/google", "_blank");
-};
+  <button id="connectBtn">Se connecter à Gmail</button>
 
-// Fonction pour récupérer les emails après connexion
-async function fetchEmails() {
-  try {
-    const res = await fetch("http://127.0.0.1:3001/emails/today");
-    if (res.status === 401) {
-      emailsDiv.innerHTML = "Veuillez vous connecter à Gmail d'abord.";
-      return;
+  <div id="emailsContainer"></div>
+
+  <script>
+    const connectBtn = document.getElementById("connectBtn");
+    const emailsContainer = document.getElementById("emailsContainer");
+
+    // Redirige pour l'autorisation Gmail
+    connectBtn.addEventListener("click", () => {
+      window.location.href = "http://127.0.0.1:3001/auth/google";
+    });
+
+    async function fetchEmails() {
+      try {
+        const res = await fetch("http://127.0.0.1:3001/emails/today");
+        if (res.status === 401) {
+          emailsContainer.innerHTML = "<p>Non connecté à Gmail. Clique sur 'Se connecter à Gmail'.</p>";
+          return;
+        }
+        const emails = await res.json();
+        if (emails.length === 0) {
+          emailsContainer.innerHTML = "<p>Aucun email aujourd'hui.</p>";
+          return;
+        }
+        emailsContainer.innerHTML = emails.map(email => `
+          <div class="email-card">
+            <strong>De : ${email.from}</strong>
+            <span>Sujet : ${email.subject}</span>
+          </div>
+        `).join("");
+      } catch (err) {
+        emailsContainer.innerHTML = `<p>Erreur : ${err.message}</p>`;
+      }
     }
-    const data = await res.json();
-    if(data.length === 0){
-        emailsDiv.innerHTML = "Aucun email reçu aujourd'hui.";
-        return;
-    }
-    emailsDiv.innerHTML = "<h2>Résumé des emails de la journée :</h2>" +
-      data.map(e => `<b>${e.from}</b> : ${e.subject}`).join("<br>");
-  } catch(err) {
-    emailsDiv.innerHTML = "Erreur : " + err.message;
-  }
-}
 
-// Vérifie les emails toutes les 10 secondes (après connexion)
-setInterval(fetchEmails, 10000);
-</script>
+    // Essayez de récupérer les emails toutes les 5 secondes
+    setInterval(fetchEmails, 5000);
+  </script>
+
 </body>
 </html>
