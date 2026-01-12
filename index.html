@@ -19,18 +19,21 @@
   </nav>
 </header>
 
-<main class="hero">
+<main class="hero" id="landing">
   <h1>Reprenez le contrôle de vos emails.</h1>
   <p class="subtitle">
     MailTime analyse automatiquement vos emails Gmail, les résume avec intelligence
-    et vous aide à prioriser l’essentiel.  
-    Gagnez du temps, restez concentré et transformez votre boîte mail en un outil
-    de productivité moderne.
+    et vous aide à prioriser l’essentiel.
   </p>
 
   <button class="main-cta" id="mainLoginBtn">
     Se connecter avec Gmail
   </button>
+</main>
+
+<main class="dashboard" id="dashboard" style="display:none;">
+  <h2>Vos emails aujourd’hui</h2>
+  <div id="emails"></div>
 </main>
 
 <script src="script.js"></script>
