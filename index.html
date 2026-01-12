@@ -3,41 +3,43 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MailTime - La gestion professionnelle de vos emails</title>
+<title>MailTime</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <header>
-  <img src="logo.png" alt="MailTime Logo">
+  <img src="logo.png" class="logo" alt="MailTime Logo">
   <nav>
     <button id="signInBtn">Sign In</button>
     <button id="connectBtn">Se connecter à Gmail</button>
+    <img src="" class="avatar" id="avatar" style="display:none;">
+    <div class="dropdown" id="avatarDropdown">
+      <a href="#">Steven Raksa</a>
+      <a href="mailto:stevenraksa451@gmail.com">stevenraksa451@gmail.com</a>
+      <a href="#">Obtenir un abonnement</a>
+      <a href="#">Ajouter des membres</a>
+      <a href="#">Abonnement et facturation</a>
+      <a href="#">Free</a>
+      <a href="#">Paramètres</a>
+      <a href="#">Profil du créateur</a>
+      <a href="#">Mes collections</a>
+      <a href="#">Langue</a>
+      <a href="#">Thème Sombre</a>
+      <a href="#">Utiliser le code IA</a>
+      <a href="#">Centre d’aide</a>
+      <a href="#" id="logoutBtn">Se déconnecter</a>
+    </div>
   </nav>
 </header>
 
 <main>
   <h1>MailTime</h1>
   <p class="description">
-   MailTime : Vos emails résumés en un clin d’œil. Gérez votre journée comme un pro. Gagnez des heures chaque jour.
+    MailTime : Vos emails résumés en un clin d’œil. Gérez votre journée comme un pro. Gagnez des heures chaque jour.
   </p>
-  <img src="logo.png" alt="MailTime Logo" style="width:200px;margin-top:20px;">
 </main>
 
-<script>
-const connectBtn = document.getElementById("connectBtn");
-const signInBtn = document.getElementById("signInBtn");
-
-// Redirection vers Gmail OAuth
-connectBtn.addEventListener("click", () => {
-  window.location.href = "http://127.0.0.1:3001/auth/google";
-});
-
-// Simuler Sign In (peut être relié à un vrai backend utilisateur plus tard)
-signInBtn.addEventListener("click", () => {
-  window.location.href = "dashboard.html";
-});
-</script>
-
+<script src="script.js"></script>
 </body>
 </html>
