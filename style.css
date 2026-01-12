@@ -1,98 +1,75 @@
-/* Couleurs sombres style luxe & espace */
-body {
+* {
   margin: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(135deg, #0d0d1a, #1a1a2e);
-  color: #e0e0e0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
-header {
+body {
+  background: #ffffff;
+  color: #000000;
+}
+
+/* HEADER */
+.header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 50px;
-  border-bottom: 1px solid #333;
+  padding: 30px 60px;
 }
 
-header img {
-  height: 60px;
+.logo img {
+  height: 70px; /* logo bien grand */
 }
 
+/* BOUTON HEADER */
 nav button {
-  margin-left: 15px;
-  padding: 10px 20px;
-  background: #f5a623; /* luxe / or */
+  background: none;
   border: none;
-  border-radius: 5px;
+  font-size: 16px;
   cursor: pointer;
-  font-weight: bold;
-  color: #1a1a2e;
+  font-weight: 500;
 }
 
-nav button:hover {
-  opacity: 0.9;
+/* AVATAR */
+.avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  cursor: pointer;
 }
 
-main {
+/* HERO */
+.hero {
   max-width: 900px;
-  margin: 50px auto;
+  margin: 120px auto;
   text-align: center;
 }
 
-h1 {
-  font-size: 3em;
+.hero h1 {
+  font-size: 52px;
+  font-weight: 600;
   margin-bottom: 20px;
-  color: #f5a623;
 }
 
-h2 {
-  margin-top: 40px;
-  font-size: 2em;
-  color: #fff;
-}
-
-.description {
-  font-size: 1.2em;
+.subtitle {
+  font-size: 18px;
   line-height: 1.6;
+  color: #333;
   margin-bottom: 40px;
-  color: #ccc;
 }
 
-.email-card {
-  background: #1a1a2e;
-  border-left: 5px solid #f5a623;
-  padding: 15px;
-  margin: 15px 0;
-  border-radius: 10px;
-  text-align: left;
-}
-
-.email-card strong {
-  display: block;
-  font-size: 1.1em;
-  margin-bottom: 5px;
-}
-
-.email-card .subject {
-  font-weight: normal;
-  color: #ccc;
-}
-
-.email-card .importance {
-  font-style: italic;
-  color: #f5a623;
-}
-
-.email-card button {
-  margin-top: 10px;
-  background: #00bfff;
+/* CTA PRINCIPAL */
+.main-cta {
+  background: #1a73e8;
+  color: #fff;
   border: none;
-  padding: 8px 12px;
-  border-radius: 5px;
+  padding: 14px 28px;
+  font-size: 16px;
+  border-radius: 30px;
   cursor: pointer;
-  font-weight: bold;
 }
 
-.email-card button:hover {
+.main-cta:hover {
   opacity: 0.9;
 }
