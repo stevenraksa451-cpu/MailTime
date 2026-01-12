@@ -14,7 +14,7 @@
   </div>
 
   <nav>
-    <button id="loginBtn">Se connecter</button>
+    <button id="loginBtn" onclick="loginWithGoogle()">Se connecter</button>
     <img id="avatar" class="avatar" style="display:none;" />
   </nav>
 </header>
@@ -26,9 +26,9 @@
     et vous aide à prioriser l’essentiel.
   </p>
 
-  <button class="main-cta" id="mainLoginBtn">
-    Se connecter avec Gmail
-  </button>
+  <button class="main-cta" id="mainLoginBtn" onclick="loginWithGoogle()">
+  Se connecter avec Gmail
+</button>
 </main>
 
 <main class="dashboard" id="dashboard" style="display:none;">
