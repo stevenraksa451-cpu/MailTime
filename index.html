@@ -1,144 +1,69 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <title>MailTime – Assistant Email IA</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <style>
-        body {
-            margin: 0;
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background: linear-gradient(135deg, #4f46e5, #6366f1, #818cf8);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .app-container {
-            background: #ffffff;
-            width: 100%;
-            max-width: 900px;
-            border-radius: 16px;
-            padding: 32px;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.2);
-        }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 24px;
-        }
-
-        .header h1 {
-            font-size: 26px;
-            font-weight: 600;
-            color: #111827;
-        }
-
-        .gmail-btn {
-            background: #111827;
-            color: white;
-            border: none;
-            padding: 12px 18px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-        }
-
-        .gmail-btn:hover {
-            background: #1f2937;
-        }
-
-        label {
-            font-size: 14px;
-            color: #374151;
-            margin-bottom: 6px;
-            display: block;
-        }
-
-        textarea {
-            width: 100%;
-            height: 200px;
-            border-radius: 10px;
-            border: 1px solid #d1d5db;
-            padding: 14px;
-            font-size: 14px;
-            resize: none;
-        }
-
-        .analyze-btn {
-            margin-top: 16px;
-            background: linear-gradient(135deg, #4f46e5, #6366f1);
-            color: white;
-            border: none;
-            padding: 14px 20px;
-            font-size: 15px;
-            border-radius: 10px;
-            cursor: pointer;
-            width: 100%;
-        }
-
-        .analyze-btn:hover {
-            opacity: 0.95;
-        }
-
-        .result {
-            margin-top: 28px;
-            background: #f9fafb;
-            padding: 20px;
-            border-radius: 12px;
-            border-left: 5px solid #6366f1;
-        }
-
-        .result p {
-            margin: 8px 0;
-            color: #111827;
-            font-size: 14px;
-        }
-
-        .footer {
-            margin-top: 24px;
-            text-align: center;
-            font-size: 12px;
-            color: #6b7280;
-        }
-    </style>
+<meta charset="UTF-8">
+<title>MailTime</title>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: linear-gradient(to right, #4facfe, #00f2fe);
+  color: #333;
+  text-align: center;
+  padding: 50px;
+}
+button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+#emails {
+  margin-top: 20px;
+  text-align: left;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>
 </head>
 <body>
-
-<div class="app-container">
-    <div class="header">
-       <div style="display:flex; align-items:center; gap:12px;">
-    <img src="logo1.1.png" alt="MailTime logo" style="height:80px;">
-</div>
-        <button class="gmail-btn">Connecter Gmail</button>
-    </div>
-
-    <label>Colle ton email :</label>
-    <textarea id="emailInput" placeholder="Colle ici le contenu de ton email..."></textarea>
-
-    <button class="analyze-btn" onclick="analyzeEmail()">Analyser l’email</button>
-
-    <div class="result" id="resultBox" style="display:none;">
-        <p><strong>Résumé :</strong> Répondre à ce mail.</p>
-        <p><strong>Priorité :</strong> Moyenne</p>
-        <p><strong>Temps estimé :</strong> 5 minutes</p>
-        <p><strong>Action :</strong> Répondre aujourd’hui</p>
-    </div>
-
-    <div class="footer">
-        © 2026 MailTime – Assistant Email Intelligent
-    </div>
-</div>
+<h1>MailTime</h1>
+<button id="connectBtn">Se connecter à Gmail</button>
+<div id="emails"></div>
 
 <script>
-    function analyzeEmail() {
-        document.getElementById("resultBox").style.display = "block";
-    }
-</script>
+const connectBtn = document.getElementById("connectBtn");
+const emailsDiv = document.getElementById("emails");
 
+connectBtn.onclick = () => {
+  // ouvre la page d'autorisation Google dans un nouvel onglet
+  window.open("http://127.0.0.1:3001/auth/google", "_blank");
+};
+
+// Fonction pour récupérer les emails après connexion
+async function fetchEmails() {
+  try {
+    const res = await fetch("http://127.0.0.1:3001/emails/today");
+    if (res.status === 401) {
+      emailsDiv.innerHTML = "Veuillez vous connecter à Gmail d'abord.";
+      return;
+    }
+    const data = await res.json();
+    if(data.length === 0){
+        emailsDiv.innerHTML = "Aucun email reçu aujourd'hui.";
+        return;
+    }
+    emailsDiv.innerHTML = "<h2>Résumé des emails de la journée :</h2>" +
+      data.map(e => `<b>${e.from}</b> : ${e.subject}`).join("<br>");
+  } catch(err) {
+    emailsDiv.innerHTML = "Erreur : " + err.message;
+  }
+}
+
+// Vérifie les emails toutes les 10 secondes (après connexion)
+setInterval(fetchEmails, 10000);
+</script>
 </body>
 </html>
