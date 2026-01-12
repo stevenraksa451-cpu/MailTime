@@ -17,7 +17,7 @@ body {
 }
 
 .logo img {
-  height: 60px;     /* ← taille du logo (changeable) */
+  height: 45px;     /* ← taille du logo (changeable) */
   width: auto;
 }
 
