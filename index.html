@@ -1,38 +1,28 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MailTime</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-<header class="header">
-  <div class="logo">
-    <img src="logo.png" alt="MailTime logo">
-  </div>
-
-  <nav>
+  <header>
+    <img src="logo.png" alt="MailTime" id="logo">
     <button id="loginBtn">Se connecter</button>
-    <img id="avatar" class="avatar" style="display:none;" />
-  </nav>
-</header>
+    <img id="avatar" style="display:none" />
+    <div id="userMenu" style="display:none">
+      <p id="userName"></p>
+      <p id="userEmail"></p>
+      <button id="logoutBtn">Se déconnecter</button>
+    </div>
+  </header>
 
-<main class="hero">
-  <h1>Reprenez le contrôle de vos emails.</h1>
-  <p class="subtitle">
-    MailTime analyse automatiquement vos emails Gmail, les résume avec intelligence
-    et vous aide à prioriser l’essentiel.  
-    Gagnez du temps, restez concentré et transformez votre boîte mail en un outil
-    de productivité moderne.
-  </p>
+  <main>
+    <h1>Bienvenue sur MailTime</h1>
+    <p>L’application qui résume vos emails et vous fait gagner du temps.</p>
+  </main>
 
-  <button class="main-cta" id="mainLoginBtn">
-    Se connecter
-  </button>
-</main>
-
-<script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
