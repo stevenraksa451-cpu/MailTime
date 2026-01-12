@@ -191,3 +191,15 @@ nav button {
   padding: 16px;
   border-bottom: 1px solid #eee;
 }
+
+.bg-video {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+
+  object-fit: cover;
+  z-index: -1;
+  opacity: 0.35;
+}
