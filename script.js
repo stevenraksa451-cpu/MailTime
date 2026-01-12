@@ -5,25 +5,48 @@ const landing = document.getElementById("landing");
 const dashboard = document.getElementById("dashboard");
 const emailsDiv = document.getElementById("emails");
 
-function login() {
+let authCheckInterval = null;
+
+/* 🔐 OUVERTURE GOOGLE LOGIN */
+function loginWithGoogle() {
   window.open(
     "http://127.0.0.1:3001/auth/google",
     "_blank",
     "width=500,height=600"
   );
+
+  // Commence à vérifier si l'utilisateur est connecté
+  startAuthPolling();
 }
 
-loginBtn.onclick = login;
-mainLoginBtn.onclick = login;
+loginBtn.onclick = loginWithGoogle;
+mainLoginBtn.onclick = loginWithGoogle;
 
-async function checkAuth() {
-  const res = await fetch("http://127.0.0.1:3001/me");
-  if (!res.ok) return;
+/* 🔄 VÉRIFIE SI L'UTILISATEUR EST CONNECTÉ */
+function startAuthPolling() {
+  if (authCheckInterval) return;
 
-  const user = await res.json();
+  authCheckInterval = setInterval(async () => {
+    try {
+      const res = await fetch("http://127.0.0.1:3001/me");
+      if (!res.ok) return;
 
+      const user = await res.json();
+      clearInterval(authCheckInterval);
+      authCheckInterval = null;
+
+      onUserAuthenticated(user);
+    } catch (err) {
+      // ignore
+    }
+  }, 1000);
+}
+
+/* ✅ UTILISATEUR CONNECTÉ */
+function onUserAuthenticated(user) {
   loginBtn.style.display = "none";
   mainLoginBtn.style.display = "none";
+
   avatar.src = user.picture;
   avatar.style.display = "block";
 
@@ -33,11 +56,13 @@ async function checkAuth() {
   loadEmails();
 }
 
+/* 📩 CHARGEMENT DES EMAILS */
 async function loadEmails() {
   const res = await fetch("http://127.0.0.1:3001/emails/today");
   const emails = await res.json();
 
   emailsDiv.innerHTML = "";
+
   if (!emails.length) {
     emailsDiv.innerHTML = "<p>Aucun email aujourd’hui.</p>";
     return;
@@ -50,4 +75,5 @@ async function loadEmails() {
   });
 }
 
-checkAuth();
+/* 🔁 AU RECHARGEMENT DE LA PAGE */
+startAuthPolling();
