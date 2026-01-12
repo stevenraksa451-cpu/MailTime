@@ -18,11 +18,26 @@
     <img id="avatar" class="avatar" style="display:none;" />
   </nav>
 </header>
-  <div id="userMenu" class="user-menu" style="display:none;">
-  <p id="userName"></p>
-  <p id="userEmail"></p>
-  <hr />
-  <button id="logoutBtn">Se déconnecter</button>
+ <div id="userMenu" class="user-menu">
+  <div class="user-info">
+    <p id="userName"></p>
+    <p id="userEmail"></p>
+  </div>
+
+  <ul class="menu-list">
+    <li>Obtenir un abonnement</li>
+    <li>Ajouter des membres</li>
+    <li>Abonnement et facturation</li>
+    <li class="status">Free</li>
+    <li>Paramètres</li>
+    <li>Profil du créateur</li>
+    <li>Mes collections</li>
+    <li>Langue · Français</li>
+    <li>Thème · Clair</li>
+    <li>Centre d’aide</li>
+  </ul>
+
+  <button id="logoutBtn" class="logout-btn">Se déconnecter</button>
 </div>
 
 <main class="hero" id="landing">
