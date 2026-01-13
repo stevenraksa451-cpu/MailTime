@@ -147,3 +147,22 @@ async function loadEmails() {
 function fakeSummary(subject) {
   return `Email important concernant : "${subject}"`;
 }
+
+document.addEventListener("DOMContentLoaded", async () => {
+  try {
+    const res = await fetch("http://127.0.0.1:3001/me", {
+      credentials: "include"
+    });
+
+    if (!res.ok) return;
+
+    const user = await res.json();
+    if (!user || !user.email) return;
+
+    onConnected(user);
+
+  } catch (e) {
+    console.log("Utilisateur non connecté");
+  }
+});
+
