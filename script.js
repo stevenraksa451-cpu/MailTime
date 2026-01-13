@@ -88,9 +88,11 @@ function onConnected(user) {
   isAuthenticating = false;
   hideLoader();
 
+  document.getElementById("landing").style.display = "none";
+  document.getElementById("dashboard").style.display = "block";
+
   avatar.src = user.picture;
   avatar.style.display = "block";
-
   loginBtn.style.display = "none";
   mainLoginBtn.style.display = "none";
 
@@ -99,6 +101,7 @@ function onConnected(user) {
 
   loadEmails();
 }
+
 
 /* =====================
    MENU AVATAR
