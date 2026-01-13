@@ -1,8 +1,15 @@
-function onConnected(user) {
-  isAuthenticating = false;
-  hideLoader();
-
+/* =====================
+   VARIABLES GLOBALES
+===================== */
 let isAuthenticating = false;
+
+const loginBtn = document.getElementById("loginBtn");
+const mainLoginBtn = document.getElementById("mainLoginBtn");
+const avatar = document.getElementById("avatar");
+
+/* =====================
+   LOADER
+===================== */
 function showLoader() {
   document.getElementById("loadingOverlay").style.display = "flex";
 }
@@ -11,15 +18,14 @@ function hideLoader() {
   document.getElementById("loadingOverlay").style.display = "none";
 }
 
-const loginBtn = document.getElementById("loginBtn");
-const mainLoginBtn = document.getElementById("mainLoginBtn");
-const avatar = document.getElementById("avatar");
-
+/* =====================
+   LOGIN
+===================== */
 loginBtn.onclick = login;
 mainLoginBtn.onclick = login;
 
 function login() {
-  if (isAuthenticating) return; // sécurité
+  if (isAuthenticating) return;
 
   isAuthenticating = true;
   showLoader();
@@ -33,9 +39,13 @@ function login() {
   checkAuth(authWindow);
 }
 
+/* =====================
+   CHECK AUTH
+===================== */
 async function checkAuth(authWindow) {
   const interval = setInterval(async () => {
-    // Tant que la popup est ouverte → on attend
+
+    // Tant que la popup est ouverte, on attend
     if (authWindow && !authWindow.closed) return;
 
     try {
@@ -44,19 +54,14 @@ async function checkAuth(authWindow) {
       });
 
       if (!res.ok) {
-        isAuthenticating = false;
-        hideLoader();
-        clearInterval(interval);
+        stopAuth(interval);
         return;
       }
 
       const user = await res.json();
 
-      // Sécurité finale
       if (!user || !user.email) {
-        isAuthenticating = false;
-        hideLoader();
-        clearInterval(interval);
+        stopAuth(interval);
         return;
       }
 
@@ -64,18 +69,28 @@ async function checkAuth(authWindow) {
       onConnected(user);
 
     } catch {
-      isAuthenticating = false;
-      hideLoader();
-      clearInterval(interval);
+      stopAuth(interval);
     }
+
   }, 800);
 }
 
+function stopAuth(interval) {
+  clearInterval(interval);
+  isAuthenticating = false;
+  hideLoader();
+}
+
+/* =====================
+   CONNECTÉ
+===================== */
 function onConnected(user) {
+  isAuthenticating = false;
   hideLoader();
 
   avatar.src = user.picture;
   avatar.style.display = "block";
+
   loginBtn.style.display = "none";
   mainLoginBtn.style.display = "none";
 
@@ -85,25 +100,31 @@ function onConnected(user) {
   loadEmails();
 }
 
-// MENU AVATAR
+/* =====================
+   MENU AVATAR
+===================== */
 avatar.onclick = () => {
   const menu = document.getElementById("userMenu");
   menu.style.display = menu.style.display === "block" ? "none" : "block";
 };
 
-// LOGOUT
+/* =====================
+   LOGOUT
+===================== */
 document.getElementById("logoutBtn").onclick = async () => {
   await fetch("http://127.0.0.1:3001/logout", { method: "POST" });
   location.reload();
 };
 
-// EMAILS + RÉSUMÉ
+/* =====================
+   EMAILS
+===================== */
 async function loadEmails() {
   const res = await fetch("http://127.0.0.1:3001/emails/today");
   const emails = await res.json();
 
-  const container = document.createElement("div");
-  container.className = "emails";
+  const container = document.getElementById("emails");
+  container.innerHTML = "";
 
   emails.forEach(email => {
     const card = document.createElement("div");
@@ -115,11 +136,11 @@ async function loadEmails() {
     `;
     container.appendChild(card);
   });
-
-  document.body.appendChild(container);
 }
 
-// FAUX résumé (placeholder IA)
+/* =====================
+   FAUX RÉSUMÉ IA
+===================== */
 function fakeSummary(subject) {
   return `Email important concernant : "${subject}"`;
 }
