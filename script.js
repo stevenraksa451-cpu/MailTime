@@ -1,3 +1,5 @@
+document.addEventListener("DOMContentLoaded", () => {
+
 /* =====================
    VARIABLES GLOBALES
 ===================== */
@@ -45,7 +47,6 @@ function login() {
 async function checkAuth(authWindow) {
   const interval = setInterval(async () => {
 
-    // Tant que la popup est ouverte, on attend
     if (authWindow && !authWindow.closed) return;
 
     try {
@@ -59,7 +60,6 @@ async function checkAuth(authWindow) {
       }
 
       const user = await res.json();
-
       if (!user || !user.email) {
         stopAuth(interval);
         return;
@@ -102,7 +102,6 @@ function onConnected(user) {
   loadEmails();
 }
 
-
 /* =====================
    MENU AVATAR
 ===================== */
@@ -141,14 +140,14 @@ async function loadEmails() {
   });
 }
 
-/* =====================
-   FAUX RÉSUMÉ IA
-===================== */
 function fakeSummary(subject) {
   return `Email important concernant : "${subject}"`;
 }
 
-document.addEventListener("DOMContentLoaded", async () => {
+/* =====================
+   AUTO LOGIN AU CHARGEMENT
+===================== */
+(async () => {
   try {
     const res = await fetch("http://127.0.0.1:3001/me", {
       credentials: "include"
@@ -160,9 +159,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (!user || !user.email) return;
 
     onConnected(user);
+  } catch {}
+})();
 
-  } catch (e) {
-    console.log("Utilisateur non connecté");
-  }
 });
-
