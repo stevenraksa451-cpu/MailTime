@@ -35,20 +35,11 @@ function startLogin() {
     "_blank",
     "width=500,height=600"
   );
-   waitForAuth(); // 👈 LIGNE CRUCIALE
 }
 function waitForAuth() {
   const startTime = Date.now();
 
   const interval = setInterval(async () => {
-    // ⏱️ timeout 60 secondes
-    if (Date.now() - startTime > 60000) {
-      clearInterval(interval);
-      isAuthenticating = false;
-      hideLoader();
-      return;
-    }
-
     try {
       const res = await fetch("http://127.0.0.1:3001/me", {
         credentials: "include"
@@ -182,3 +173,27 @@ document.addEventListener("DOMContentLoaded", () => {
   showLoader();
   checkSession();
 });
+window.addEventListener("message", async (event) => {
+  // sécurité : on accepte uniquement le backend
+  if (event.origin !== "http://127.0.0.1:3001") return;
+
+  // on vérifie le type du message
+  if (event.data?.type !== "AUTH_SUCCESS") return;
+
+  // 👉 connexion validée
+  try {
+    const res = await fetch("http://127.0.0.1:3001/me", {
+      credentials: "include"
+    });
+
+    if (!res.ok) throw new Error();
+
+    const user = await res.json();
+    onConnected(user);
+
+  } catch {
+    hideLoader();
+    isAuthenticating = false;
+  }
+});
+
