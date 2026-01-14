@@ -120,3 +120,22 @@ async function loadEmails() {
 function fakeSummary(subject) {
   return `Email important concernant : "${subject}"`;
 }
+setTimeout(async () => {
+  try {
+    const res = await fetch("http://127.0.0.1:3001/me");
+    if (!res.ok) {
+      hideLoader();
+      return;
+    }
+
+    const user = await res.json();
+    if (!user || !user.email) {
+      hideLoader();
+      return;
+    }
+
+    onConnected(user);
+  } catch {
+    hideLoader();
+  }
+}, 3000);
