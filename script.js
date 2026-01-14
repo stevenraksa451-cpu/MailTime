@@ -35,32 +35,73 @@ function startLogin() {
     "_blank",
     "width=500,height=600"
   );
+   waitForAuth(); // 👈 LIGNE CRUCIALE
+}
+function waitForAuth() {
+  const startTime = Date.now();
+
+  const interval = setInterval(async () => {
+    // ⏱️ timeout 60 secondes
+    if (Date.now() - startTime > 60000) {
+      clearInterval(interval);
+      isAuthenticating = false;
+      hideLoader();
+      return;
+    }
+
+    try {
+      const res = await fetch("http://127.0.0.1:3001/me", {
+        credentials: "include"
+      });
+
+      if (!res.ok) return;
+
+      const user = await res.json();
+      if (!user || !user.email) return;
+
+      clearInterval(interval);
+      onConnected(user);
+
+    } catch {}
+  }, 800);
 }
 
-/* =====================
-   LISTEN AUTH SUCCESS
-===================== */
-window.addEventListener("message", async (event) => {
-  if (event.origin !== "http://127.0.0.1:3001") return;
-  if (event.data?.type !== "AUTH_SUCCESS") return;
 
+/* =====================
+   CHECK SESSION
+===================== */
+async function checkSession() {
   try {
     const res = await fetch("http://127.0.0.1:3001/me", {
       credentials: "include"
     });
-    if (!res.ok) return;
+
+    if (!res.ok) {
+      hideLoader();
+      return;
+    }
 
     const user = await res.json();
+    if (!user || !user.email) {
+      hideLoader();
+      return;
+    }
+
     onConnected(user);
+
   } catch {
     hideLoader();
   }
-});
+}
 
 /* =====================
    CONNECTED
 ===================== */
 function onConnected(user) {
+   if (!user || !user.email) {
+  hideLoader();
+  return;
+}
   isAuthenticating = false;
   hideLoader();
 
@@ -84,14 +125,18 @@ function onConnected(user) {
 ===================== */
 avatar.onclick = () => {
   const menu = document.getElementById("userMenu");
-  menu.style.display = menu.style.display === "block" ? "none" : "block";
+  menu.style.display =
+    menu.style.display === "block" ? "none" : "block";
 };
 
 /* =====================
    LOGOUT
 ===================== */
 document.getElementById("logoutBtn").onclick = async () => {
-  await fetch("http://127.0.0.1:3001/logout", { method: "POST" });
+  await fetch("http://127.0.0.1:3001/logout", {
+    method: "POST",
+    credentials: "include"
+  });
   location.reload();
 };
 
@@ -103,12 +148,10 @@ async function loadEmails() {
     credentials: "include"
   });
 
-  if (!res.ok) {
-    console.error("Impossible de charger les emails");
-    return;
-  }
+  if (!res.ok) return;
 
   const emails = await res.json();
+  if (!Array.isArray(emails)) return;
 
   const container = document.getElementById("emails");
   container.innerHTML = "";
@@ -125,27 +168,17 @@ async function loadEmails() {
   });
 }
 
-
 /* =====================
-   FAKE IA (placeholder)
+   FAKE IA
 ===================== */
 function fakeSummary(subject) {
   return `Email important concernant : "${subject}"`;
 }
-document.addEventListener("DOMContentLoaded", async () => {
-  try {
-    const res = await fetch("http://127.0.0.1:3001/me", {
-      credentials: "include"
-    });
 
-    if (!res.ok) return;
-
-    const user = await res.json();
-    if (!user || !user.email) return;
-
-    onConnected(user);
-  } catch {
-    // utilisateur non connecté
-  }
+/* =====================
+   AUTO CHECK AU LOAD
+===================== */
+document.addEventListener("DOMContentLoaded", () => {
+  showLoader();
+  checkSession();
 });
-
