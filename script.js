@@ -99,8 +99,15 @@ document.getElementById("logoutBtn").onclick = async () => {
    EMAILS
 ===================== */
 async function loadEmails() {
-  const res = await fetch("http://127.0.0.1:3001/emails/today");
-   credentials: "include"
+  const res = await fetch("http://127.0.0.1:3001/emails/today", {
+    credentials: "include"
+  });
+
+  if (!res.ok) {
+    console.error("Impossible de charger les emails");
+    return;
+  }
+
   const emails = await res.json();
 
   const container = document.getElementById("emails");
@@ -117,6 +124,7 @@ async function loadEmails() {
     container.appendChild(card);
   });
 }
+
 
 /* =====================
    FAKE IA (placeholder)
