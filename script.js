@@ -41,10 +41,13 @@ function startLogin() {
    LISTEN AUTH SUCCESS
 ===================== */
 window.addEventListener("message", async (event) => {
+  if (event.origin !== "http://127.0.0.1:3001") return;
   if (event.data?.type !== "AUTH_SUCCESS") return;
 
   try {
-    const res = await fetch("http://127.0.0.1:3001/me");
+    const res = await fetch("http://127.0.0.1:3001/me", {
+      credentials: "include"
+    });
     if (!res.ok) return;
 
     const user = await res.json();
@@ -97,6 +100,7 @@ document.getElementById("logoutBtn").onclick = async () => {
 ===================== */
 async function loadEmails() {
   const res = await fetch("http://127.0.0.1:3001/emails/today");
+   credentials: "include"
   const emails = await res.json();
 
   const container = document.getElementById("emails");
@@ -120,22 +124,20 @@ async function loadEmails() {
 function fakeSummary(subject) {
   return `Email important concernant : "${subject}"`;
 }
-setTimeout(async () => {
+document.addEventListener("DOMContentLoaded", async () => {
   try {
-    const res = await fetch("http://127.0.0.1:3001/me");
-    if (!res.ok) {
-      hideLoader();
-      return;
-    }
+    const res = await fetch("http://127.0.0.1:3001/me", {
+      credentials: "include"
+    });
+
+    if (!res.ok) return;
 
     const user = await res.json();
-    if (!user || !user.email) {
-      hideLoader();
-      return;
-    }
+    if (!user || !user.email) return;
 
     onConnected(user);
   } catch {
-    hideLoader();
+    // utilisateur non connecté
   }
-}, 3000);
+});
+
