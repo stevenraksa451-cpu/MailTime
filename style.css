@@ -300,3 +300,38 @@ nav button {
   font-size: 0.9rem;
   opacity: 0.85;
 }
+/* Container des actions rapides */
+.quick-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center; /* centre horizontalement */
+  gap: 24px;               /* espace entre les cartes */
+  margin: 40px 0;
+}
+
+/* Chaque carte */
+.action-card {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(8px);
+  border-radius: 12px;
+  padding: 20px;
+  width: 220px;
+  text-align: center;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.action-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.12);
+}
+
+.action-card h3 {
+  font-size: 18px;
+  margin-bottom: 12px;
+}
+
+.action-card p {
+  font-size: 14px;
+  color: #444;
+}
