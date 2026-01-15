@@ -6,91 +6,90 @@
   <title>MailTime</title>
   <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
 
+  <!-- VIDEO BACKGROUND -->
   <video class="bg-video" autoplay muted loop playsinline>
-  <source src="background.mp4" type="video/mp4">
-</video>
+    <source src="background.mp4" type="video/mp4">
+  </video>
 
-<header class="header">
-  <div class="logo">
-    <img src="logo6.png" alt="MailTime logo">
+  <!-- HEADER -->
+  <header class="header">
+    <div class="logo">
+      <img src="logo6.png" alt="MailTime logo">
+    </div>
+
+    <nav>
+      <button id="loginBtn">Se connecter</button>
+      <img id="avatar" class="avatar" style="display:none;" />
+    </nav>
+  </header>
+
+  <!-- MENU AVATAR -->
+  <div id="userMenu" class="user-menu">
+    <div class="user-info">
+      <p id="userName"></p>
+      <p id="userEmail"></p>
+    </div>
+
+    <ul class="menu-list">
+      <li>Obtenir un abonnement</li>
+      <li>Ajouter des membres</li>
+      <li>Abonnement et facturation</li>
+      <li class="status">Free</li>
+      <li>Paramètres</li>
+      <li>Profil du créateur</li>
+      <li>Mes collections</li>
+      <li>Langue · Français</li>
+      <li>Thème · Clair</li>
+      <li>Centre d’aide</li>
+    </ul>
+
+    <button id="logoutBtn" class="logout-btn">Se déconnecter</button>
   </div>
 
-  <nav>
-    <button id="loginBtn">Se connecter</button>
-    <img id="avatar" class="avatar" style="display:none;" />
-  </nav>
-</header>
-  <div class="header-divider"></div>
- <div id="userMenu" class="user-menu">
-  <div class="user-info">
-    <p id="userName"></p>
-    <p id="userEmail"></p>
-  </div>
-<div class="test-line"></div>
+  <!-- PAGE ACCUEIL -->
+  <main id="landing" class="hero">
+    <h1>Reprenez le contrôle de vos emails.</h1>
+    <p class="subtitle">
+      MailTime analyse automatiquement vos emails, les résume avec intelligence et vous aide à prioriser l’essentiel.
+    </p>
 
-  <ul class="menu-list">
-    <li>Obtenir un abonnement</li>
-    <li>Ajouter des membres</li>
-    <li>Abonnement et facturation</li>
-    <li class="status">Free</li>
-    <li>Paramètres</li>
-    <li>Profil du créateur</li>
-    <li>Mes collections</li>
-    <li>Langue · Français</li>
-    <li>Thème · Clair</li>
-    <li>Centre d’aide</li>
-  </ul>
+    <button id="mainLoginBtn" class="main-cta">
+      Se connecter avec Gmail
+    </button>
 
-  <button id="logoutBtn" class="logout-btn">Se déconnecter</button>
-</div>
+    <section class="quick-actions">
+      <div class="action-card">
+        <h3>Exemple de résumé</h3>
+        <p>Découvrez comment MailTime résume un email.</p>
+      </div>
+      <div class="action-card">
+        <h3>Comment ça fonctionne</h3>
+        <p>Connexion sécurisée, analyse intelligente.</p>
+      </div>
+      <div class="action-card">
+        <h3>Sécurité</h3>
+        <p>Vos emails ne sont jamais stockés.</p>
+      </div>
+      <div class="action-card">
+        <h3>IA utilisée</h3>
+        <p>Résumés générés par IA moderne.</p>
+      </div>
+    </section>
 
-<main class="hero" id="landing">
-  <h1>Reprenez le contrôle de vos emails.</h1>
-   <p class="subtitle">
-MailTime analyse automatiquement vos emails, les résume avec intelligence et vous aide à prioriser l’essentiel. Gagnez du temps, restez concentré et transformez votre boîte mail en un outil de productivité moderne.
-  </p>
+    <section class="trust">
+      <p>Connexion sécurisée via Google · Lecture seule</p>
+    </section>
+  </main>
 
- <button class="main-cta" id="mainLoginBtn">
-  Se connecter avec Gmail
-</button>
-  <!-- ACTIONS RAPIDES -->
-<section class="quick-actions">
-  <div class="action-card">
-    <h3> Exemple de résumé</h3>
-    <p>Découvrez comment MailTime résume un email en quelques secondes.</p>
-  </div>
+  <!-- DASHBOARD -->
+  <main id="dashboard" class="dashboard" style="display:none;">
+    <h2>Vos emails aujourd’hui</h2>
+    <div id="emails"></div>
+  </main>
 
-  <div class="action-card">
-    <h3> Comment ça fonctionne</h3>
-    <p>Connexion sécurisée, analyse intelligente, résultats immédiats.</p>
-  </div>
-
-  <div class="action-card">
-    <h3> Sécurité</h3>
-    <p>Vos emails ne sont jamais modifiés ni stockés.</p>
-  </div>
-
-  <div class="action-card">
-    <h3> IA utilisée</h3>
-    <p>Résumés générés par intelligence artificielle moderne.</p>
-  </div>
-</section>
-  <section class="trust">
-  <p>Connexion sécurisée via Google · Accès en lecture seule · Aucune donnée stockée</p>
-</section>
-</main>
-
-<main class="dashboard" id="dashboard" style="display:none;">
-  <h2>Vos emails aujourd’hui</h2>
-  <div id="emails"></div>
-</main>
-
-<script src="script.js"></script>
-  <div id="loadingOverlay" class="loading-overlay" style="display:none;">
-  <div class="spinner"></div>
-</div>
-
+  <script src="script.js"></script>
 </body>
 </html>
