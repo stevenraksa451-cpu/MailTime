@@ -36,63 +36,56 @@ function startLogin() {
     "width=500,height=600"
   );
 }
-function waitForAuth() {
-  const startTime = Date.now();
-
-  const interval = setInterval(async () => {
-    try {
-      const res = await fetch("http://127.0.0.1:3001/me", {
-        credentials: "include"
-      });
-
-      if (!res.ok) return;
-
-      const user = await res.json();
-      if (!user || !user.email) return;
-
-      clearInterval(interval);
-      onConnected(user);
-
-    } catch {}
-  }, 800);
-}
-
 
 /* =====================
-   CHECK SESSION
+   AUTH SUCCESS (POSTMESSAGE)
 ===================== */
-async function checkSession() {
+window.addEventListener("message", async (event) => {
+  if (event.origin !== "http://127.0.0.1:3001") return;
+  if (event.data?.type !== "AUTH_SUCCESS") return;
+
   try {
     const res = await fetch("http://127.0.0.1:3001/me", {
       credentials: "include"
     });
 
-    if (!res.ok) {
-      hideLoader();
-      return;
-    }
+    if (!res.ok) throw new Error("Session invalide");
 
     const user = await res.json();
-    if (!user || !user.email) {
-      hideLoader();
-      return;
-    }
-
     onConnected(user);
 
-  } catch {
+  } catch (err) {
+    console.error("Erreur auth :", err);
+    isAuthenticating = false;
     hideLoader();
   }
-}
+});
+
+/* =====================
+   SESSION AUTO AU RELOAD
+===================== */
+document.addEventListener("DOMContentLoaded", async () => {
+  try {
+    const res = await fetch("http://127.0.0.1:3001/me", {
+      credentials: "include"
+    });
+
+    if (!res.ok) return;
+
+    const user = await res.json();
+    if (user?.email) onConnected(user);
+
+  } catch {
+    // utilisateur non connecté → landing normal
+  }
+});
 
 /* =====================
    CONNECTED
 ===================== */
 function onConnected(user) {
-   if (!user || !user.email) {
-  hideLoader();
-  return;
-}
+  if (!user || !user.email) return;
+
   isAuthenticating = false;
   hideLoader();
 
@@ -116,8 +109,7 @@ function onConnected(user) {
 ===================== */
 avatar.onclick = () => {
   const menu = document.getElementById("userMenu");
-  menu.style.display =
-    menu.style.display === "block" ? "none" : "block";
+  menu.style.display = menu.style.display === "block" ? "none" : "block";
 };
 
 /* =====================
@@ -135,28 +127,33 @@ document.getElementById("logoutBtn").onclick = async () => {
    EMAILS
 ===================== */
 async function loadEmails() {
-  const res = await fetch("http://127.0.0.1:3001/emails/today", {
-    credentials: "include"
-  });
+  try {
+    const res = await fetch("http://127.0.0.1:3001/emails/today", {
+      credentials: "include"
+    });
 
-  if (!res.ok) return;
+    if (!res.ok) return;
 
-  const emails = await res.json();
-  if (!Array.isArray(emails)) return;
+    const emails = await res.json();
+    if (!Array.isArray(emails)) return;
 
-  const container = document.getElementById("emails");
-  container.innerHTML = "";
+    const container = document.getElementById("emails");
+    container.innerHTML = "";
 
-  emails.forEach(email => {
-    const card = document.createElement("div");
-    card.className = "email-card";
-    card.innerHTML = `
-      <strong>${email.from}</strong>
-      <p>${email.subject}</p>
-      <em>Résumé : ${fakeSummary(email.subject)}</em>
-    `;
-    container.appendChild(card);
-  });
+    emails.forEach(email => {
+      const card = document.createElement("div");
+      card.className = "email-card";
+      card.innerHTML = `
+        <strong>${email.from}</strong>
+        <p>${email.subject}</p>
+        <em>Résumé : ${fakeSummary(email.subject)}</em>
+      `;
+      container.appendChild(card);
+    });
+
+  } catch (e) {
+    console.error("Erreur emails :", e);
+  }
 }
 
 /* =====================
@@ -165,35 +162,3 @@ async function loadEmails() {
 function fakeSummary(subject) {
   return `Email important concernant : "${subject}"`;
 }
-
-/* =====================
-   AUTO CHECK AU LOAD
-===================== */
-document.addEventListener("DOMContentLoaded", () => {
-  showLoader();
-  checkSession();
-});
-window.addEventListener("message", async (event) => {
-  // sécurité : on accepte uniquement le backend
-  if (event.origin !== "http://127.0.0.1:3001") return;
-
-  // on vérifie le type du message
-  if (event.data?.type !== "AUTH_SUCCESS") return;
-
-  // 👉 connexion validée
-  try {
-    const res = await fetch("http://127.0.0.1:3001/me", {
-      credentials: "include"
-    });
-
-    if (!res.ok) throw new Error();
-
-    const user = await res.json();
-    onConnected(user);
-
-  } catch {
-    hideLoader();
-    isAuthenticating = false;
-  }
-});
-
