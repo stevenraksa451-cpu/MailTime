@@ -1,5 +1,5 @@
 /* =====================
-   VARIABLES
+   ELEMENTS
 ===================== */
 const loginBtn = document.getElementById("loginBtn");
 const mainLoginBtn = document.getElementById("mainLoginBtn");
@@ -20,42 +20,40 @@ function login() {
 }
 
 /* =====================
-   AUTH SUCCESS
+   MESSAGE GOOGLE (IMPORTANT)
 ===================== */
 window.addEventListener("message", async (event) => {
+  // 🔴 LE MESSAGE VIENT DU BACKEND
   if (event.origin !== "http://127.0.0.1:3001") return;
   if (event.data?.type !== "AUTH_SUCCESS") return;
 
-  const res = await fetch("http://127.0.0.1:3001/me", {
-    credentials: "include"
-  });
+  try {
+    const res = await fetch("http://127.0.0.1:3001/me");
+    if (!res.ok) throw new Error("Non connecté");
 
-  if (!res.ok) return;
+    const user = await res.json();
+    showDashboard(user);
 
-  const user = await res.json();
-  showDashboard(user);
-});
-
-/* =====================
-   AUTO CHECK SESSION
-===================== */
-document.addEventListener("DOMContentLoaded", async () => {
-  const res = await fetch("http://127.0.0.1:3001/me", {
-    credentials: "include"
-  });
-
-  if (!res.ok) return;
-
-  const user = await res.json();
-  showDashboard(user);
+  } catch (err) {
+    console.error("Erreur auth :", err);
+  }
 });
 
 /* =====================
    DASHBOARD
 ===================== */
 function showDashboard(user) {
+  if (!user || !user.email) return;
+
+  // cacher landing
   document.getElementById("landing").style.display = "none";
+
+  // afficher dashboard
   document.getElementById("dashboard").style.display = "block";
+
+  // infos utilisateur
+  document.getElementById("userName").innerText = user.name;
+  document.getElementById("userEmail").innerText = user.email;
 
   avatar.src = user.picture;
   avatar.style.display = "block";
@@ -63,44 +61,39 @@ function showDashboard(user) {
   loginBtn.style.display = "none";
   mainLoginBtn.style.display = "none";
 
-  document.getElementById("userName").innerText = user.name;
-  document.getElementById("userEmail").innerText = user.email;
-
   loadEmails();
+}
+
+/* =====================
+   EMAILS
+===================== */
+async function loadEmails() {
+  try {
+    const res = await fetch("http://127.0.0.1:3001/emails/today");
+    if (!res.ok) return;
+
+    const emails = await res.json();
+    const container = document.getElementById("emails");
+    container.innerHTML = "";
+
+    emails.forEach(email => {
+      const card = document.createElement("div");
+      card.className = "email-card";
+      card.innerHTML = `
+        <strong>${email.from || "Inconnu"}</strong>
+        <p>${email.subject || "(sans sujet)"}</p>
+      `;
+      container.appendChild(card);
+    });
+  } catch (e) {
+    console.error("Erreur emails", e);
+  }
 }
 
 /* =====================
    LOGOUT
 ===================== */
 document.getElementById("logoutBtn").onclick = async () => {
-  await fetch("http://127.0.0.1:3001/logout", {
-    method: "POST",
-    credentials: "include"
-  });
+  await fetch("http://127.0.0.1:3001/logout", { method: "POST" });
   location.reload();
 };
-
-/* =====================
-   EMAILS
-===================== */
-async function loadEmails() {
-  const res = await fetch("http://127.0.0.1:3001/emails/today", {
-    credentials: "include"
-  });
-
-  if (!res.ok) return;
-
-  const emails = await res.json();
-  const container = document.getElementById("emails");
-  container.innerHTML = "";
-
-  emails.forEach(email => {
-    const div = document.createElement("div");
-    div.className = "email-card";
-    div.innerHTML = `
-      <strong>${email.from}</strong>
-      <p>${email.subject}</p>
-    `;
-    container.appendChild(div);
-  });
-}
