@@ -1,56 +1,35 @@
-<!-- DASHBOARD -->
-<main id="dashboard" class="dashboard" style="display:none;">
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>MailTime – Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
 
-  <!-- HEADER DASHBOARD -->
-  <section class="dashboard-header">
-    <div class="profile">
-      <img id="avatar" class="avatar" />
-      <div class="profile-info">
-        <p id="userName" class="profile-name"></p>
-        <p id="userEmail" class="profile-email"></p>
-      </div>
-    </div>
-  </section>
-  <div id="userMenu" class="user-menu">
+<header class="header">
+  <div class="logo">
+    <img src="logo6.png">
+  </div>
+  <nav>
+    <img id="avatar" class="avatar">
+  </nav>
+</header>
+
+<!-- MENU AVATAR -->
+<div id="userMenu" class="user-menu">
   <div class="user-info">
     <p id="userName"></p>
     <p id="userEmail"></p>
   </div>
-
-  <ul class="menu-list">
-    <li>Abonnement</li>
-    <li>Paramètres</li>
-    <li>Langue · Français</li>
-    <li>Thème · Clair</li>
-    <li class="status">Plan Free</li>
-  </ul>
-
   <button id="logoutBtn" class="logout-btn">Se déconnecter</button>
 </div>
-  <!-- QUICK ACTIONS -->
-  <section class="quick-actions">
-    <div class="action-card">
-      <h3>Résumé intelligent</h3>
-      <p>Analyse automatique de vos emails importants</p>
-    </div>
-    <div class="action-card">
-      <h3>Priorités</h3>
-      <p>Identifiez les messages urgents</p>
-    </div>
-    <div class="action-card">
-      <h3>Sécurité</h3>
-      <p>Lecture seule · Données non stockées</p>
-    </div>
-    <div class="action-card">
-      <h3>Productivité</h3>
-      <p>Gagnez du temps chaque jour</p>
-    </div>
-  </section>
 
-  <!-- EMAILS -->
-  <section class="emails-section">
-    <h2>Vos emails aujourd’hui</h2>
-    <div id="emails" class="emails"></div>
-  </section>
-
+<main class="dashboard">
+  <h2>Résumé de vos emails</h2>
+  <div id="emails"></div>
 </main>
+
+<script src="script.js"></script>
+</body>
+</html>
