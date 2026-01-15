@@ -1,70 +1,80 @@
-const loginBtn = document.getElementById("loginBtn");
-const mainLoginBtn = document.getElementById("mainLoginBtn");
-const avatar = document.getElementById("avatar");
-const landing = document.getElementById("landing");
-const dashboard = document.getElementById("dashboard");
-const emailsContainer = document.getElementById("emails");
+const API = "http://127.0.0.1:3001";
 
-/* ===== LOGIN ===== */
-function startLogin() {
-  window.open(
-    "http://127.0.0.1:3001/auth/google",
-    "_blank",
-    "width=500,height=600"
-  );
+/* =====================
+   PAGE LOGIN
+===================== */
+const loginBtn = document.getElementById("loginBtn");
+
+if (loginBtn) {
+  loginBtn.addEventListener("click", () => {
+    window.location.href = `${API}/auth/google`;
+  });
 }
 
-loginBtn.onclick = startLogin;
-mainLoginBtn.onclick = startLogin;
+/* =====================
+   PAGE DASHBOARD
+===================== */
+async function loadDashboard() {
+  try {
+    const res = await fetch(`${API}/me`, {
+      credentials: "include"
+    });
 
-/* ===== POST MESSAGE GOOGLE ===== */
-window.addEventListener("message", async (event) => {
-  if (event.origin !== "http://127.0.0.1:3001") return;
-  if (event.data?.type !== "AUTH_SUCCESS") return;
+    if (!res.ok) {
+      window.location.href = "index.html";
+      return;
+    }
 
-  await loadUser();
-});
+    const user = await res.json();
+    showUser(user);
+    loadEmails();
 
-/* ===== LOAD USER ===== */
-async function loadUser() {
-  const res = await fetch("http://127.0.0.1:3001/me", {
-    credentials: "include"
-  });
+  } catch (e) {
+    console.error(e);
+  }
+}
 
-  if (!res.ok) return;
-
-  const user = await res.json();
-
-  landing.style.display = "none";
-  dashboard.style.display = "block";
-
-  avatar.src = user.picture;
-  avatar.style.display = "block";
-
+function showUser(user) {
+  document.getElementById("avatar").src = user.picture;
   document.getElementById("userName").textContent = user.name;
   document.getElementById("userEmail").textContent = user.email;
-
-  loadEmails();
 }
 
-/* ===== EMAILS ===== */
 async function loadEmails() {
-  const res = await fetch("http://127.0.0.1:3001/emails/today", {
+  const res = await fetch(`${API}/emails`, {
     credentials: "include"
   });
 
-  if (!res.ok) return;
-
   const emails = await res.json();
-  emailsContainer.innerHTML = "";
+  const container = document.getElementById("emails");
 
-  emails.forEach(e => {
+  emails.forEach(mail => {
     const div = document.createElement("div");
     div.className = "email-card";
-    div.innerHTML = `<strong>${e.from}</strong><p>${e.subject}</p>`;
-    emailsContainer.appendChild(div);
+    div.innerHTML = `
+      <strong>${mail.from}</strong>
+      <p>${mail.summary}</p>
+      <em>${mail.date}</em>
+    `;
+    container.appendChild(div);
   });
 }
 
-/* ===== AUTO SESSION ===== */
-loadUser();
+/* =====================
+   MENU AVATAR
+===================== */
+const avatar = document.getElementById("avatar");
+const menu = document.getElementById("userMenu");
+
+if (avatar) {
+  avatar.addEventListener("click", () => {
+    menu.style.display = menu.style.display === "block" ? "none" : "block";
+  });
+
+  document.getElementById("logoutBtn").addEventListener("click", async () => {
+    await fetch(`${API}/logout`, { credentials: "include" });
+    window.location.href = "index.html";
+  });
+
+  loadDashboard();
+}
