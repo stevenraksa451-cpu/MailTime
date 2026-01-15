@@ -352,3 +352,46 @@ nav button {
   height: 36px;
   margin-bottom: 12px;
 }
+.dashboard {
+  max-width: 1100px;
+  margin: 60px auto;
+  padding: 20px;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+}
+
+.profile {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.profile-info {
+  line-height: 1.2;
+}
+
+.profile-name {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.profile-email {
+  font-size: 14px;
+  color: #555;
+}
+
+.emails-section h2 {
+  margin: 40px 0 20px;
+  font-size: 22px;
+}
+
+.emails {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
