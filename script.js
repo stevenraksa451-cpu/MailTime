@@ -1,6 +1,6 @@
 
 /* =====================
-   VARIABLES
+   VARIABLES GLOBALES
 ===================== */
 let isAuthenticating = false;
 
@@ -22,48 +22,72 @@ function hideLoader() {
 /* =====================
    LOGIN
 ===================== */
-loginBtn.onclick = startLogin;
-mainLoginBtn.onclick = startLogin;
+loginBtn.onclick = login;
+mainLoginBtn.onclick = login;
 
-function startLogin() {
+function login() {
   if (isAuthenticating) return;
 
   isAuthenticating = true;
   showLoader();
 
-  window.open(
+  const authWindow = window.open(
     "http://127.0.0.1:3001/auth/google",
     "_blank",
     "width=500,height=600"
   );
+
+  checkAuth(authWindow);
 }
 
 /* =====================
-   LISTEN AUTH SUCCESS
+   CHECK AUTH
 ===================== */
-window.addEventListener("message", async (event) => {
-  if (event.data?.type !== "AUTH_SUCCESS") return;
+async function checkAuth(authWindow) {
+  const interval = setInterval(async () => {
 
-  try {
-    const res = await fetch("http://127.0.0.1:3001/me");
-    if (!res.ok) return;
+    // Tant que la popup est ouverte, on attend
+    if (authWindow && !authWindow.closed) return;
 
-    const user = await res.json();
-    onConnected(user);
-  } catch {
-    hideLoader();
-  }
-});
+    try {
+      const res = await fetch("http://127.0.0.1:3001/me", {
+        credentials: "include"
+      });
+
+      if (!res.ok) {
+        stopAuth(interval);
+        return;
+      }
+
+      const user = await res.json();
+
+      if (!user || !user.email) {
+        stopAuth(interval);
+        return;
+      }
+
+      clearInterval(interval);
+      onConnected(user);
+
+    } catch {
+      stopAuth(interval);
+    }
+
+  }, 800);
+}
+
+function stopAuth(interval) {
+  clearInterval(interval);
+  isAuthenticating = false;
+  hideLoader();
+}
 
 /* =====================
-   CONNECTED
+   CONNECTÉ
 ===================== */
 function onConnected(user) {
   isAuthenticating = false;
   hideLoader();
-
-  document.getElementById("landing").style.display = "none";
-  document.getElementById("dashboard").style.display = "block";
 
   avatar.src = user.picture;
   avatar.style.display = "block";
@@ -78,7 +102,7 @@ function onConnected(user) {
 }
 
 /* =====================
-   AVATAR MENU
+   MENU AVATAR
 ===================== */
 avatar.onclick = () => {
   const menu = document.getElementById("userMenu");
@@ -116,7 +140,7 @@ async function loadEmails() {
 }
 
 /* =====================
-   FAKE IA (placeholder)
+   FAUX RÉSUMÉ IA
 ===================== */
 function fakeSummary(subject) {
   return `Email important concernant : "${subject}"`;
