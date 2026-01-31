@@ -1,151 +1,338 @@
 
-/* =====================
-   VARIABLES
-===================== */
-let isAuthenticating = false;
 
-const loginBtn = document.getElementById("loginBtn");
-const mainLoginBtn = document.getElementById("mainLoginBtn");
-const avatar = document.getElementById("avatar");
 
-/* =====================
-   LOADER
-===================== */
-function showLoader() {
-  document.getElementById("loadingOverlay").style.display = "flex";
+* {
+  box-sizing: border-box;
+  font-family: Inter, system-ui, sans-serif;
 }
 
-function hideLoader() {
-  document.getElementById("loadingOverlay").style.display = "none";
+body {
+  margin: 0;
+  background: #ffffff;
+  color: #111;
 }
 
-/* =====================
-   LOGIN
-===================== */
-loginBtn.onclick = startLogin;
-mainLoginBtn.onclick = startLogin;
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 48px;
+}
 
-function startLogin() {
-  if (isAuthenticating) return;
+.logo img {
+  height: 35px;     /* ← taille du logo (changeable) */
+  width: auto;
+}
 
-  isAuthenticating = true;
-  showLoader();
+.emails {
+  max-width: 900px;
+  margin: 80px auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
 
-  window.open(
-    "http://127.0.0.1:3001/auth/google",
-    "_blank",
-    "width=500,height=600"
+.email-card {
+  padding: 22px 26px;
+  border-radius: 16px;
+
+  background: linear-gradient(
+    135deg,
+    rgba(240, 244, 255, 0.75),
+    rgba(255, 255, 255, 0.85)
+  );
+
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.email-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.12);
+}
+
+.email-card strong {
+  font-size: 15px;
+  color: #111;
+}
+
+.email-card p {
+  margin: 6px 0 10px;
+  font-size: 16px;
+  color: #000;
+}
+
+.email-card em {
+  font-size: 14px;
+  color: #444;
+  font-style: normal;
+}
+nav button {
+  background: transparent;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.hero {
+  max-width: 900px;
+  margin: 120px auto;
+  text-align: center;
+  padding: 0 20px;
+}
+
+.hero h1 {
+  font-size: 56px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.subtitle {
+  font-size: 20px;
+  line-height: 1.6;
+  color: #444;
+}
+
+.main-cta {
+  margin-top: 40px;
+  padding: 16px 32px;
+  font-size: 18px;
+  border-radius: 999px;
+  border: none;
+  background: #1a73e8;
+  color: white;
+  cursor: pointer;
+}
+
+.dashboard {
+  max-width: 900px;
+  margin: 80px auto;
+  padding: 20px;
+}
+
+.user-menu {
+  position: absolute;
+  top: 90px;
+  right: 40px;
+  width: 260px;
+
+  background: #f2f2f2;
+  border-radius: 14px;
+  padding: 16px;
+
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+  display: none;
+  z-index: 1000;
+}
+
+.user-info {
+  margin-bottom: 12px;
+}
+
+.user-info p:first-child {
+  font-weight: 600;
+  color: #111;
+}
+
+.user-info p:last-child {
+  font-size: 14px;
+  color: #555;
+}
+
+.menu-list {
+  list-style: none;
+  padding: 0;
+  margin: 12px 0;
+}
+
+.menu-list li {
+  padding: 10px 8px;
+  font-size: 14px;
+  color: #222;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.menu-list li:hover {
+  background: #e4e4e4;
+}
+
+.menu-list .status {
+  color: #666;
+  font-size: 13px;
+  cursor: default;
+}
+
+.logout-btn {
+  margin-top: 12px;
+  width: 100%;
+  padding: 10px;
+  background: #000;
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.logout-btn:hover {
+  opacity: 0.9;
+}
+
+
+#emails div {
+  padding: 16px;
+  border-bottom: 1px solid #eee;
+}
+
+.bg-video {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+
+  object-fit: cover;
+  z-index: -1;
+  opacity: 0.35;
+}
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.header::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(0, 0, 0, 0.12),
+    transparent
   );
 }
 
-/* =====================
-   LISTEN AUTH SUCCESS
-===================== */
-window.addEventListener("message", async (event) => {
-  if (event.origin !== "http://127.0.0.1:3001") return;
-  if (event.data?.type !== "AUTH_SUCCESS") return;
+.loading-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  z-index: 9999;
 
-  try {
-    const res = await fetch("http://127.0.0.1:3001/me", {
-      credentials: "include"
-    });
-    if (!res.ok) return;
-
-    const user = await res.json();
-    onConnected(user);
-  } catch {
-    hideLoader();
-  }
-});
-
-/* =====================
-   CONNECTED
-===================== */
-function onConnected(user) {
-  isAuthenticating = false;
-  hideLoader();
-
-  document.getElementById("landing").style.display = "none";
-  document.getElementById("dashboard").style.display = "block";
-
-  avatar.src = user.picture;
-  avatar.style.display = "block";
-
-  loginBtn.style.display = "none";
-  mainLoginBtn.style.display = "none";
-
-  document.getElementById("userName").innerText = user.name;
-  document.getElementById("userEmail").innerText = user.email;
-
-  loadEmails();
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* =====================
-   AVATAR MENU
-===================== */
-avatar.onclick = () => {
-  const menu = document.getElementById("userMenu");
-  menu.style.display = menu.style.display === "block" ? "none" : "block";
-};
+.spinner {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 4px solid rgba(79,140,255,0.2);
+  border-top-color: #4f8cff;
 
-/* =====================
-   LOGOUT
-===================== */
-document.getElementById("logoutBtn").onclick = async () => {
-  await fetch("http://127.0.0.1:3001/logout", { method: "POST" });
-  location.reload();
-};
-
-/* =====================
-   EMAILS
-===================== */
-async function loadEmails() {
-  const res = await fetch("http://127.0.0.1:3001/emails/today", {
-    credentials: "include"
-  });
-
-  if (!res.ok) {
-    console.error("Impossible de charger les emails");
-    return;
-  }
-
-  const emails = await res.json();
-
-  const container = document.getElementById("emails");
-  container.innerHTML = "";
-
-  emails.forEach(email => {
-    const card = document.createElement("div");
-    card.className = "email-card";
-    card.innerHTML = `
-      <strong>${email.from}</strong>
-      <p>${email.subject}</p>
-      <em>Résumé : ${fakeSummary(email.subject)}</em>
-    `;
-    container.appendChild(card);
-  });
+  animation: spin 0.9s linear infinite;
 }
 
-
-/* =====================
-   FAKE IA (placeholder)
-===================== */
-function fakeSummary(subject) {
-  return `Email important concernant : "${subject}"`;
-}
-document.addEventListener("DOMContentLoaded", async () => {
-  try {
-    const res = await fetch("http://127.0.0.1:3001/me", {
-      credentials: "include"
-    });
-
-    if (!res.ok) return;
-
-    const user = await res.json();
-    if (!user || !user.email) return;
-
-    onConnected(user);
-  } catch {
-    // utilisateur non connecté
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
   }
-});
+}
+/* =====================
+   ACTIONS RAPIDES
+===================== */
+
+.quick-actions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  margin-top: 50px;
+  max-width: 1100px;
+}
+
+.action-card {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  border-radius: 14px;
+  padding: 20px;
+  color: white;
+  cursor: pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.action-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+}
+
+.action-card h3 {
+  margin-bottom: 8px;
+  font-size: 1.05rem;
+}
+.trust {
+  margin-top: 60px;
+  font-size: 0.85rem;
+  opacity: 0.7;
+  text-align: center;
+}
+
+.action-card p {
+  font-size: 0.9rem;
+  opacity: 0.85;
+}
+/* Container des actions rapides */
+.quick-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center; /* centre horizontalement */
+  gap: 24px;               /* espace entre les cartes */
+  margin: 40px 0;
+}
+
+/* Chaque carte */
+.action-card {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(8px);
+  border-radius: 12px;
+  padding: 20px;
+  width: 220px;
+  text-align: center;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.action-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.12);
+}
+
+.action-card h3 {
+  font-size: 18px;
+  margin-bottom: 12px;
+}
+
+.action-card p {
+  font-size: 14px;
+  color: #444;
+}
