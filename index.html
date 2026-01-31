@@ -1,44 +1,103 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>Test Dashboard</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 40px;
-    }
-    #dashboard {
-      display: none;
-      margin-top: 30px;
-      padding: 20px;
-      border-radius: 12px;
-      background: #f4f6ff;
-    }
-    .email {
-      margin-top: 10px;
-      padding: 10px;
-      background: white;
-      border-radius: 8px;
-    }
-  </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MailTime</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-<h1>Test affichage dashboard</h1>
+  <video class="bg-video" autoplay muted loop playsinline>
+  <source src="background.mp4" type="video/mp4">
+</video>
 
-<button id="testLogin">Simuler connexion</button>
+<header class="header">
+  <div class="logo">
+    <img src="logo6.png" alt="MailTime logo">
+  </div>
 
-<div id="dashboard">
-  <h2>Dashboard</h2>
-  <img id="avatar" width="60" style="border-radius:50%">
-  <p id="name"></p>
-  <p id="email"></p>
+  <nav>
+    <button id="loginBtn">Se connecter</button>
+    <img id="avatar" class="avatar" style="display:none;" />
+  </nav>
+</header>
+  <div class="header-divider"></div>
+ <div id="userMenu" class="user-menu">
+  <div class="user-info">
+    <p id="userName"></p>
+    <p id="userEmail"></p>
+  </div>
+<div class="test-line"></div>
 
-  <h3>Emails</h3>
-  <div id="emails"></div>
+  <ul class="menu-list">
+    <li>Obtenir un abonnement</li>
+    <li>Ajouter des membres</li>
+    <li>Abonnement et facturation</li>
+    <li class="status">Free</li>
+    <li>Paramètres</li>
+    <li>Profil du créateur</li>
+    <li>Mes collections</li>
+    <li>Langue · Français</li>
+    <li>Thème · Clair</li>
+    <li>Centre d’aide</li>
+  </ul>
+
+  <button id="logoutBtn" class="logout-btn">Se déconnecter</button>
 </div>
 
-<script src="test.js"></script>
+<main class="hero" id="landing">
+  <h1>Reprenez le contrôle de vos emails.</h1>
+   <p class="subtitle">
+MailTime analyse automatiquement vos emails Gmail, les résume avec intelligence et vous aide à prioriser l’essentiel. Gagnez du temps, restez concentré et transformez votre boîte mail en un outil de productivité moderne.
+  </p>
+
+ <button class="main-cta" id="mainLoginBtn">
+  Se connecter avec Gmail
+</button>
+  <!-- ACTIONS RAPIDES -->
+<section class="quick-actions">
+  <div class="action-card">
+    <h3> Exemple de résumé</h3>
+    <p>Découvrez comment MailTime résume un email en quelques secondes.</p>
+  </div>
+
+  <div class="action-card">
+    <h3> Comment ça fonctionne</h3>
+    <p>Connexion sécurisée, analyse intelligente, résultats immédiats.</p>
+  </div>
+
+  <div class="action-card">
+    <h3> Sécurité</h3>
+    <p>Vos emails ne sont jamais modifiés ni stockés.</p>
+  </div>
+
+  <div class="action-card">
+    <h3> IA utilisée</h3>
+    <p>Résumés générés par intelligence artificielle moderne.</p>
+  </div>
+</section>
+  <section class="trust">
+  <p>Connexion sécurisée via Google · Accès en lecture seule · Aucune donnée stockée</p>
+</section>
+  <p class="subtitle">
+MailTime analyse automatiquement vos emails Gmail, les résume avec intelligence et vous aide à prioriser l’essentiel. Gagnez du temps, restez concentré et transformez votre boîte mail en un outil de productivité moderne.
+  </p>
+
+ <button class="main-cta" id="mainLoginBtn">
+  Se connecter avec Gmail
+</button>
+</main>
+
+<main class="dashboard" id="dashboard" style="display:none;">
+  <h2>Vos emails aujourd’hui</h2>
+  <div id="emails"></div>
+</main>
+
+<script src="script.js"></script>
+  <div id="loadingOverlay" class="loading-overlay" style="display:none;">
+  <div class="spinner"></div>
+</div>
+
 </body>
 </html>
