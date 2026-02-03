@@ -1,99 +1,45 @@
-
-/* =====================
-   VARIABLES GLOBALES
-===================== */
-let isAuthenticating = false;
-
 const loginBtn = document.getElementById("loginBtn");
 const mainLoginBtn = document.getElementById("mainLoginBtn");
 const avatar = document.getElementById("avatar");
 
 /* =====================
-   LOADER
-===================== */
-function showLoader() {
-  document.getElementById("loadingOverlay").style.display = "flex";
-}
-
-function hideLoader() {
-  document.getElementById("loadingOverlay").style.display = "none";
-}
-
-/* =====================
    LOGIN
 ===================== */
-loginBtn.onclick = login;
-mainLoginBtn.onclick = login;
+loginBtn.onclick = startLogin;
+mainLoginBtn.onclick = startLogin;
 
-function login() {
-  if (isAuthenticating) return;
-
-  isAuthenticating = true;
-  showLoader();
-
-  const authWindow = window.open(
+function startLogin() {
+  window.open(
     "http://127.0.0.1:3001/auth/google",
     "_blank",
     "width=500,height=600"
   );
-
-  checkAuth(authWindow);
 }
 
 /* =====================
-   CHECK AUTH
+   AUTH MESSAGE
 ===================== */
-async function checkAuth(authWindow) {
-  const interval = setInterval(async () => {
+window.addEventListener("message", async (event) => {
+  if (event.origin !== "http://127.0.0.1:3001") return;
+  if (event.data?.type !== "AUTH_SUCCESS") return;
 
-    // Tant que la popup est ouverte, on attend
-    if (authWindow && !authWindow.closed) return;
+  const res = await fetch("http://127.0.0.1:3001/me", {
+    credentials: "include"
+  });
 
-    try {
-      const res = await fetch("http://127.0.0.1:3001/me", {
-        credentials: "include"
-      });
-
-      if (!res.ok) {
-        stopAuth(interval);
-        return;
-      }
-
-      const user = await res.json();
-
-      if (!user || !user.email) {
-        stopAuth(interval);
-        return;
-      }
-
-      clearInterval(interval);
-      onConnected(user);
-
-    } catch {
-      stopAuth(interval);
-    }
-
-  }, 800);
-}
-
-function stopAuth(interval) {
-  clearInterval(interval);
-  isAuthenticating = false;
-  hideLoader();
-}
+  const user = await res.json();
+  onConnected(user);
+});
 
 /* =====================
-   CONNECTÉ
+   CONNECTED
 ===================== */
 function onConnected(user) {
-  isAuthenticating = false;
-  hideLoader();
+  document.getElementById("landing").style.display = "none";
+  document.getElementById("dashboard").style.display = "block";
 
   avatar.src = user.picture;
   avatar.style.display = "block";
-
-  loginBtn.style.display = "none";
-  mainLoginBtn.style.display = "none";
 
   document.getElementById("userName").innerText = user.name;
   document.getElementById("userEmail").innerText = user.email;
@@ -102,46 +48,36 @@ function onConnected(user) {
 }
 
 /* =====================
-   MENU AVATAR
+   EMAILS
 ===================== */
-avatar.onclick = () => {
-  const menu = document.getElementById("userMenu");
-  menu.style.display = menu.style.display === "block" ? "none" : "block";
-};
+async function loadEmails() {
+  const res = await fetch("http://127.0.0.1:3001/emails/today", {
+    credentials: "include"
+  });
+
+  const emails = await res.json();
+  const container = document.getElementById("emails");
+  container.innerHTML = "";
+
+  emails.forEach(e => {
+    const div = document.createElement("div");
+    div.className = "email-card";
+    div.innerHTML = `
+      <strong>${e.from}</strong>
+      <p>${e.subject}</p>
+      <em>Résumé automatique</em>
+    `;
+    container.appendChild(div);
+  });
+}
 
 /* =====================
    LOGOUT
 ===================== */
 document.getElementById("logoutBtn").onclick = async () => {
-  await fetch("http://127.0.0.1:3001/logout", { method: "POST" });
+  await fetch("http://127.0.0.1:3001/logout", {
+    method: "POST",
+    credentials: "include"
+  });
   location.reload();
 };
-
-/* =====================
-   EMAILS
-===================== */
-async function loadEmails() {
-  const res = await fetch("http://127.0.0.1:3001/emails/today");
-  const emails = await res.json();
-
-  const container = document.getElementById("emails");
-  container.innerHTML = "";
-
-  emails.forEach(email => {
-    const card = document.createElement("div");
-    card.className = "email-card";
-    card.innerHTML = `
-      <strong>${email.from}</strong>
-      <p>${email.subject}</p>
-      <em>Résumé : ${fakeSummary(email.subject)}</em>
-    `;
-    container.appendChild(card);
-  });
-}
-
-/* =====================
-   FAUX RÉSUMÉ IA
-===================== */
-function fakeSummary(subject) {
-  return `Email important concernant : "${subject}"`;
-}
