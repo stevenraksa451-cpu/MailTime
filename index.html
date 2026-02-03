@@ -1,79 +1,141 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<title>MailZen – Assistant Email</title>
+    <meta charset="UTF-8">
+    <title>MailTime – Assistant Email IA</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<style>
-body {
-  font-family: Arial, sans-serif;
-  background: #f4f6f8;
-  padding: 20px;
-}
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #4f46e5, #6366f1, #818cf8);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-h2 {
-  text-align: center;
-}
+        .app-container {
+            background: #ffffff;
+            width: 100%;
+            max-width: 900px;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.2);
+        }
 
-textarea {
-  width: 100%;
-  height: 150px;
-  padding: 10px;
-  font-size: 14px;
-}
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
 
-button {
-  padding: 10px 20px;
-  margin-top: 10px;
-  font-size: 16px;
-  cursor: pointer;
-}
+        .header h1 {
+            font-size: 26px;
+            font-weight: 600;
+            color: #111827;
+        }
 
-#resultat {
-  background: white;
-  padding: 15px;
-  margin-top: 15px;
-  border-radius: 5px;
-}
-</style>
+        .gmail-btn {
+            background: #111827;
+            color: white;
+            border: none;
+            padding: 12px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .gmail-btn:hover {
+            background: #1f2937;
+        }
+
+        label {
+            font-size: 14px;
+            color: #374151;
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        textarea {
+            width: 100%;
+            height: 200px;
+            border-radius: 10px;
+            border: 1px solid #d1d5db;
+            padding: 14px;
+            font-size: 14px;
+            resize: none;
+        }
+
+        .analyze-btn {
+            margin-top: 16px;
+            background: linear-gradient(135deg, #4f46e5, #6366f1);
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            font-size: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .analyze-btn:hover {
+            opacity: 0.95;
+        }
+
+        .result {
+            margin-top: 28px;
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 5px solid #6366f1;
+        }
+
+        .result p {
+            margin: 8px 0;
+            color: #111827;
+            font-size: 14px;
+        }
+
+        .footer {
+            margin-top: 24px;
+            text-align: center;
+            font-size: 12px;
+            color: #6b7280;
+        }
+    </style>
 </head>
-
 <body>
 
-<h2>📧 MailZen – Assistant Email IA</h2>
+<div class="app-container">
+    <div class="header">
+        <h1>MailTime</h1>
+        <button class="gmail-btn">Connecter Gmail</button>
+    </div>
 
-<p>Colle ton email ci-dessous :</p>
+    <label>Colle ton email :</label>
+    <textarea id="emailInput" placeholder="Colle ici le contenu de ton email..."></textarea>
 
-<textarea id="mail" placeholder="Colle ici le contenu de l’email..."></textarea>
-<br>
+    <button class="analyze-btn" onclick="analyzeEmail()">Analyser l’email</button>
 
-<button onclick="analyser()">Analyser l’email</button>
+    <div class="result" id="resultBox" style="display:none;">
+        <p><strong>Résumé :</strong> Répondre à ce mail.</p>
+        <p><strong>Priorité :</strong> Moyenne</p>
+        <p><strong>Temps estimé :</strong> 5 minutes</p>
+        <p><strong>Action :</strong> Répondre aujourd’hui</p>
+    </div>
 
-<div id="resultat"></div>
+    <div class="footer">
+        © 2026 MailTime – Assistant Email Intelligent
+    </div>
+</div>
 
 <script>
-function analyser() {
-  const mail = document.getElementById("mail").value;
-
-  if (mail.trim() === "") {
-    alert("Veuillez coller un email.");
-    return;
-  }
-
-  document.getElementById("resultat").innerHTML = `
-    <h3>📌 Résumé</h3>
-    <p>Cet email nécessite une réponse.</p>
-
-    <h3>🚦 Priorité</h3>
-    <p>🟡 Moyenne</p>
-
-    <h3>⏱ Temps estimé</h3>
-    <p>5 minutes</p>
-
-    <h3>✅ Action recommandée</h3>
-    <p>Répondre aujourd’hui</p>
-  `;
-}
+    function analyzeEmail() {
+        document.getElementById("resultBox").style.display = "block";
+    }
 </script>
 
 </body>
